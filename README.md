@@ -136,7 +136,7 @@ The [ViaAPI](https://developer.ridewithvia.com/) is used to book and manage ride
 
 The diagram below details how data is managed and stored in AWS.
 
-![aws-ehr-diagram](/images/AWS-Medicaid.png)
+![aws-ehr-diagram](/images/AWS-EHR.png)
 <!-- ### Data Storage -->
 
 <!-- ### User Interface -->
