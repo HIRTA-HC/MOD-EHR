@@ -136,7 +136,7 @@ The [ViaAPI](https://developer.ridewithvia.com/) is used to book and manage ride
 
 The diagram below details how data is managed and stored in AWS.
 
-![aws-ehr-diagram](/images/AWS-EHR.png)
+![AWS-EHR](/images/AWS-EHR.png)
 <!-- ### Data Storage -->
 
 <!-- ### User Interface -->
@@ -226,7 +226,7 @@ USDOT ITS4US: [https://www.its.dot.gov/its4us/index.htm](https://www.its.dot.gov
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
 [EHR]: images/EHR.png
-[aws-ehr-diagram]: images/AWS-EHR.png
+[AWS-EHR]: images/AWS-EHR.PNG
 [cloud-services-diagram]: images/cloud-services.png
 [python.org]: https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54
 [python-url]: https://www.python.org/
