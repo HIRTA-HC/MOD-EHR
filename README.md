@@ -226,7 +226,7 @@ USDOT ITS4US: [https://www.its.dot.gov/its4us/index.htm](https://www.its.dot.gov
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
 [EHR]: images/EHR.png
-[aws-ehr-diagram]: images/AWS-EHR
+[aws-ehr-diagram]: images/AWS-EHR.png
 [cloud-services-diagram]: images/cloud-services.png
 [python.org]: https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54
 [python-url]: https://www.python.org/
