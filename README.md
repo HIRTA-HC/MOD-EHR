@@ -84,9 +84,9 @@
 
 The Heart of Iowa Regional Transit Agency (HIRTA) was awarded a Phase 2 agreement of the ITS4US Program for its proposed concept “Health Connector for the Most Vulnerable: An Inclusive Mobility Experience from Beginning to End” (Health Connector) by the United States Department of Transportation (USDOT). The goal of this project is to implement a scalable and replicable solution that enables inclusive access to non-emergency medical transportation for all underserved populations and their caregivers by resolving transportation access barriers with the use of advanced technologies
 
-Health Connector is an innovative solution that will address various bottlenecks associated with transportation access to healthcare for HIRTA communities. Some of these challenges are key reasons behind missed appointments or the unacceptable level of preventive or as-needed healthcare in the HIRTA service area. 
+Health Connector is an innovative solution that will address various bottlenecks associated with transportation access to healthcare for HIRTA communities. Some of these challenges are key reasons behind missed appointments or the unacceptable level of preventive or as-needed healthcare in the HIRTA service area.
 
-The MOD-Medicaid Middleware is an open-source middleware product developed as part of Health Connector that allows data exchange between the HIRTA's transportation management system (MOD Platform TMS) and the State of Iowa Medicaid broker system. The Medicaid broker system uses Access2Care, which provides Non-Emergency Medical Transportation (NEMT) services to Medicaid and Medicare members, allowing Medicaid-funded trips to be provided through HIRTA's Health Connector for eligible Travelers. The middleware utilizes  bi-directional APIs provided by Via in the MOD Platform TMS and the Medicaid broker through Access2Care, who’s data is accessible via an API provided by Lyft. A translation engine is used at both API end points to translate data available from the APIs to a standardized data schema, enabling the data exchange by the middleware application. 
+The MOD-Medicaid Middleware is an open-source middleware product developed as part of Health Connector that allows data exchange between the HIRTA's transportation management system (MOD Platform TMS) and the State of Iowa Medicaid broker system. The Medicaid broker system uses Access2Care, which provides Non-Emergency Medical Transportation (NEMT) services to Medicaid and Medicare members, allowing Medicaid-funded trips to be provided through HIRTA's Health Connector for eligible Travelers. The middleware utilizes  bi-directional APIs provided by Via in the MOD Platform TMS and the Medicaid broker through Access2Care, who’s data is accessible via an API provided by Lyft. A translation engine is used at both API end points to translate data available from the APIs to a standardized data schema, enabling the data exchange by the middleware application.
 
 The MOD-EHR Middleware is an open-source middleware product that allows data from HIRTA's transportation management system (MOD Platform TMS) and the EHR Software system to be stored, aggregated and displayed in a central location. The purpose of this middleware product is to allow both the transportation provider and healthcare staff to monitor, manage, and ensure all patients have access to transportation to and from medical appointments. The middleware will use the bi-directional APIs provided by Via as part of the MOD Platform TMS and an EHR software provider, such as Epic, to implement the data flows described below. A translation engine is used at both API end points to translate data available from the APIs to a standardized data schema.
 
@@ -193,7 +193,7 @@ _Update steps below for specific deployment of each codebase_
    ```
 4. Enter your API in `config.js`
    ```js
-   const API_KEY = 'ENTER YOUR API';
+   const API_KEY = '<ENTER YOUR API>';
    ```
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
@@ -208,7 +208,7 @@ _Update steps below for specific deployment of each codebase_
 Distributed under the MIT License. See `LICENSE.txt` for more information.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
- --> 
+ -->
 
 
 <!-- CONTACT -->

@@ -1,0 +1,8 @@
+[tool.bandit]
+exclude_dirs = [
+    ".venv",
+    ".git",
+    "__pycache__",
+    "cdk.out",
+    "layers"
+]
