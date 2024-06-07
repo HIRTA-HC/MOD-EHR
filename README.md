@@ -60,8 +60,6 @@
 <!-- ABOUT THE PROJECT -->
 ## Product Overview
 
-<!-- [![Medicaid][medicaid-diagram](https://example.com) -->
-
 
 ### Focus of the Product
 
@@ -91,7 +89,6 @@ The intended audience for this middleware product includes, but is not limited t
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 
-
 <!-- GETTING STARTED -->
 ## Product Design
 
@@ -112,11 +109,25 @@ The [ViaAPI](https://developer.ridewithvia.com/) is used to book and manage ride
 3. Provide secure URL for webhooks to receive status change updates and set up a listener port for the URL.
 4. Get access to the VOC for testing API calls and status updates.
 
+#### EHR
+
+For the MOD-EHR middleware, an administrator is required to generate their own public/private key and share the public key in its application management portal.
+
+1. Epic requires users to load a public key in its application manager portal.
+2. Veradigm requires a JWKS to access the public key and the appropriate URL submitted to its application portal.
+3. For the MOD-EHR middleware, a user needs to sign a JSON Web Token (JWT) with the user's private key.
+
 ### Data Management & Storage
 
-The diagram below details how data is managed and stored in AWS.
+The diagrams below show the data management and storage flows in non-AWS (Flask) and AWS based environments.
+
+![Flask-EHR](/images/Flask-EHR.png)
+
+*Data management and storage flows using a non-AWS (Flask) environment*
 
 ![AWS-EHR](/images/AWS-EHR.png)
+
+*Data management and storage flows in the AWS environment*
 <!-- ### Data Storage -->
 
 <!-- ### User Interface -->
@@ -147,13 +158,22 @@ The diagram below details how data is managed and stored in AWS.
 <!-- USAGE EXAMPLES -->
 ## Tech Stack
 
+Non-AWS Deployment:
+* Execution Environment: Python 3.12 running Flask
+* Database: Configurable for any relational database that is supported by SQLAlchemy (SQLite, MySQL, Microsoft SQL Server, Oracle) with no specific database dependencies. As built: SQLite
+* Storage: Flask: Served from internal storage
+* Authentication: Flask-Oauth2 library using OAuth2
+* API Management: Flask
+* Domain/DNS: N/A
+
+AWS Deployment:
+
 * Execution Environment: AWS Lambda running Python 3.12
 * Database: AWS DynamoDB
 * Storage: AWS S3 with AWS CloudFront CDN
 * Authentication: AWS Cognito
 * API Management: AWS API Gateway
-* Domain/DNS AWS Route 53
-
+* Domain/DNS: AWS Route 53
 
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
@@ -165,10 +185,6 @@ The diagram below details how data is managed and stored in AWS.
 
 This specific deployment of the EHR Middleware product utilizes ViaAPI for the MOD Platform TMS endpoints and a custom webpage to mimick the EHR endpoint. The following deployment steps have been generalized to be applicable for use with any TMS and/or EHR provider.
 
-### Hardware
-
-_Insert required hardware_
-
 ### Cloud Infrastructure
 
 The following tables describes the cloud-based environment and libraries required to deploy the EHR middleware product.
@@ -177,22 +193,42 @@ The following tables describes the cloud-based environment and libraries require
 
 ### Software Environment
 
-_Update steps below for specific deployment of each codebase_
+#### Non-AWS installation
 
-1. Get a free API Key at [https://example.com](https://example.com)
-2. Clone the repo
+1. Generate public/private keys as described under [Data Access](href="#data-access").
+2. Install required libraries:
    ```sh
-   git clone https://github.com/your_username_/Project-Name.git
+   pip install Flask
+   pip install Flask-OAuth
+   pip install SQLAlchemy
+   pip install Waitress
    ```
-3. Install NPM packages
-   ```sh
-   npm install
-   ```
-4. Enter your API in `config.js`
-   ```js
-   const API_KEY = 'ENTER YOUR API';
-   ```
+   * All of the sub dependencies for these libraries are also required. ‘Requirements_flask.txt’ provides an easy way for an installer to quickly install all required python libraries.
+3. The entry point for the Flask application is in the root directory in the filename flask_app.py. Flask should not be directly invoked; rather a production WSGI Web Server should be utilized. Waitress is listed as an option for a production WSGI Web Server. To run the program in Waitress, issue the following command at the root of the codebase:
+    ```sh
+    waitress-serve flask_app:app
+    ```
+4. Ensure cybersecurity measures are taken:
+* Proper storage of private keys to authenticate against various EHR using FHIR.
+* Protecting the python application execution using a reverse proxy such as Apache, Nginx, or IIS.
+* Protecting files against unauthorized writes from webserver users.
+* Not executing the web server as root or with any elevated permissions.
+5. Note: Python expects to read/write into one file: mod_db_v1.db. The middleware uses SQLite, which is performant for the purpose of this project and with a sizable participant size. Modifications could be made to the code to use an existing database. SQLAlchemy supports common databases such as:
+* Microsoft SQL Server
+* Oracle
+* Postgres
 
+#### AWS Installation
+
+1. Using the included AWS Cloud Development Kit (CDK) framework, please refer to [AWS CDK](https://aws.amazon.com/cdk/) for the latest instructions. These middleware products were built using the AWS CDK v2. The following resources are required to proceed with installation:
+* AWS Account
+* AWS CDK CLI and authentication setup on the machine to execute to AWS CDK commands.
+2. Refer to AWS documentation for the latest information on how to setup your computer to interact with your AWS account.
+3. To build the AWS environment, navigate to your code directory and execute:
+    ```sh
+    cdk synth
+    cdk deploy app
+    ```
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 
@@ -221,9 +257,9 @@ USDOT ITS4US: [https://www.its.dot.gov/its4us/index.htm](https://www.its.dot.gov
 
 
 <!-- MARKDOWN LINKS & IMAGES -->
-<!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
 [EHR]: images/EHR.png
 [AWS-EHR]: images/AWS-EHR.PNG
+[Flask-EHR]: images/Flask-EHR.PNG
 [EHR-login]: images/AWS_login.PNG
 [cloud-services-diagram]: images/cloud-services.png
 [Add Appointment]: images/add-appointment.PNG
