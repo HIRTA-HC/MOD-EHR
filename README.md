@@ -1,23 +1,12 @@
 # MOD-EHR
 
-<!-- Improved compatibility of back to top link: See: https://github.com/othneildrew/Best-README-Template/pull/73 -->
 <a name="readme-top"></a>
-
-<!-- [![Contributors][contributors-shield]][contributors-url]
-[![Forks][forks-shield]][forks-url]
-[![Stargazers][stars-shield]][stars-url]
-[![Issues][issues-shield]][issues-url]
-[![MIT License][license-shield]][license-url]
-[![LinkedIn][linkedin-shield]][linkedin-url] -->
 
 
 
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
-  <!-- <a href="https://github.com/othneildrew/Best-README-Template">
-    <img src="images/logo.png" alt="Logo" width="80" height="80">
-  </a> -->
 
   <h3 align="center">MOD-EHR</h3>
 
@@ -26,12 +15,6 @@
     <br />
     <a href="https://github.com/HIRTA-HC/MOD-EHR"><strong>Explore the docs »</strong></a>
     <br />
-    <!-- <br />
-    <a href="https://github.com/othneildrew/Best-README-Template">View Demo</a>
-    ·
-    <a href="https://github.com/othneildrew/Best-README-Template/issues/new?labels=bug&template=bug-report---.md">Report Bug</a>
-    ·
-    <a href="https://github.com/othneildrew/Best-README-Template/issues/new?labels=enhancement&template=feature-request---.md">Request Feature</a> -->
   </p>
 </div>
 
@@ -68,7 +51,7 @@
     <!-- <li><a href="#contributing">Contributing</a></li>
     <li><a href="#license">License</a></li> -->
     <li><a href="#reference-links">Reference Links</a></li>
-    <li><a href="#acknowledgments">Acknowledgments</a></li>
+    <!-- <li><a href="#acknowledgments">Acknowledgments</a></li> -->
   </ol>
 </details>
 
@@ -141,9 +124,21 @@ The diagram below details how data is managed and stored in AWS.
 ### User Interface
 
 
-![EHR-login](/images/EHR_login.png)
+![EHR-login](/images/EHR_login.PNG)
 
 *Login screen for EHR webpage. Login credentials will be available for HIRTA operations staff and healthcare staff*
+
+![Add Appointment](/images/add-appointment.PNG)
+
+*Form to input healthcare appointment information (mimicking EHR system appointment data)*
+
+![Not Confirmed](/images/not-confirmed.PNG)
+
+*Appointment information appears on webpage indicating that there is no associated ride for the appointment*
+
+![Ride Confirmed](/images/ride-confirmed.PNG)
+
+*Ride information is matched to appointment booking information, indicating patient has transportation to their appointment*
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -231,6 +226,9 @@ USDOT ITS4US: [https://www.its.dot.gov/its4us/index.htm](https://www.its.dot.gov
 [AWS-EHR]: images/AWS-EHR.PNG
 [EHR-login]: images/AWS_login.PNG
 [cloud-services-diagram]: images/cloud-services.png
+[Add Appointment]: images/add-appointment.PNG
+[Not Confirmed]: images/not-confirmed.PNG
+[Ride Confirmed]: images/ride-confirmed.PNG
 [python.org]: https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54
 [python-url]: https://www.python.org/
 [aws.amazon.com]: https://img.shields.io/badge/AWS-232F32?style=for-the-badge&logo=AmazonAWS&logoColor=white
