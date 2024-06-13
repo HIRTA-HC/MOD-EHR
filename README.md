@@ -65,9 +65,8 @@
 
 The Heart of Iowa Regional Transit Agency (HIRTA) was awarded a Phase 2 agreement of the ITS4US Program for its proposed concept “Health Connector for the Most Vulnerable: An Inclusive Mobility Experience from Beginning to End” (Health Connector) by the United States Department of Transportation (USDOT). The goal of this project is to implement a scalable and replicable solution that enables inclusive access to non-emergency medical transportation for all underserved populations and their caregivers by resolving transportation access barriers with the use of advanced technologies
 
-Health Connector is an innovative solution that will address various bottlenecks associated with transportation access to healthcare for HIRTA communities. Some of these challenges are key reasons behind missed appointments or the unacceptable level of preventive or as-needed healthcare in the HIRTA service area. 
+Health Connector is an innovative solution that will address various bottlenecks associated with transportation access to healthcare for HIRTA communities. Some of these challenges are key reasons behind missed appointments or the unacceptable level of preventive or as-needed healthcare in the HIRTA service area.
 
-The MOD-EHR Middleware is an open-source middleware product that allows data from HIRTA's transportation management system (MOD Platform TMS) and the EHR Software system to be stored, aggregated and displayed in a central location. The purpose of this middleware product is to allow both the transportation provider and healthcare staff to monitor, manage, and ensure all patients have access to transportation to and from medical appointments via a webpage. Currently, the middleware uses an API provided by Via, the MOD Vendor, to gather data from the MOD Platform TMS. A web-based form was developed as to allow users to input healthcare appointment information for travelers, immitating the data that will be collected from an EHR system once implemented by partner healthcare facilities.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -203,32 +202,6 @@ The following tables describes the cloud-based environment and libraries require
    pip install SQLAlchemy
    pip install Waitress
    ```
-   * All of the sub dependencies for these libraries are also required. ‘Requirements_flask.txt’ provides an easy way for an installer to quickly install all required python libraries.
-3. The entry point for the Flask application is in the root directory in the filename flask_app.py. Flask should not be directly invoked; rather a production WSGI Web Server should be utilized. Waitress is listed as an option for a production WSGI Web Server. To run the program in Waitress, issue the following command at the root of the codebase:
-    ```sh
-    waitress-serve flask_app:app
-    ```
-4. Ensure cybersecurity measures are taken:
-* Proper storage of private keys to authenticate against various EHR using FHIR.
-* Protecting the python application execution using a reverse proxy such as Apache, Nginx, or IIS.
-* Protecting files against unauthorized writes from webserver users.
-* Not executing the web server as root or with any elevated permissions.
-5. Note: Python expects to read/write into one file: mod_db_v1.db. The middleware uses SQLite, which is performant for the purpose of this project and with a sizable participant size. Modifications could be made to the code to use an existing database. SQLAlchemy supports common databases such as:
-* Microsoft SQL Server
-* Oracle
-* Postgres
-
-#### AWS Installation
-
-1. Using the included AWS Cloud Development Kit (CDK) framework, please refer to [AWS CDK](https://aws.amazon.com/cdk/) for the latest instructions. These middleware products were built using the AWS CDK v2. The following resources are required to proceed with installation:
-* AWS Account
-* AWS CDK CLI and authentication setup on the machine to execute to AWS CDK commands.
-2. Refer to AWS documentation for the latest information on how to setup your computer to interact with your AWS account.
-3. To build the AWS environment, navigate to your code directory and execute:
-    ```sh
-    cdk synth
-    cdk deploy app
-    ```
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 
@@ -241,7 +214,7 @@ The following tables describes the cloud-based environment and libraries require
 Distributed under the MIT License. See `LICENSE.txt` for more information.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
- --> 
+ -->
 
 
 <!-- CONTACT -->

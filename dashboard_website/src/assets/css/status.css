@@ -1,0 +1,20 @@
+
+@import url(variables.css);
+
+.lozenge-success,
+.lozenge-danger {
+  padding: var(--spacing-2) var(--spacing-10);
+  border-radius: var(--radius-28);
+  color: white;
+  font-size: var(--font-small);
+  font-weight: var(--font-weight-semiBold);
+  line-height: var(--line-height-20);
+}
+
+.lozenge-success {
+  background-color: var(--surface-success-primary-light);
+}
+
+.lozenge-danger {
+  background-color: var(--surface-danger-primary-light);
+}

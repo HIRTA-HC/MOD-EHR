@@ -1,0 +1,22 @@
+@import url(variables.css);
+
+.skeleton {
+  animation: skeleton-loading 1s linear infinite alternate;
+  text-indent: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+@keyframes skeleton-loading {
+  0% {
+    background-color: var(--surface-default-moderate);
+  }
+  100% {
+    background-color: var(--background-color-BG-primary);
+  }
+}
+
+.skeleton-text {
+  width: fit-content;
+  border-radius: var(--radius-4);
+}

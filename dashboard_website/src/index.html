@@ -1,0 +1,103 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"
+        integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <link rel="icon" type="image/x-icon" href="./assets/Fav-icon.png" />
+    <script type="module" src="index.js"></script>
+    <title>Health Connector Dashboard</title>
+    <link rel="stylesheet" href="./assets/css/styles.css" />
+    <link rel="stylesheet" href="./assets/css/responsive.css" />
+    <link rel="stylesheet" href="./assets/css/status.css" />
+    <link rel="stylesheet" href="./assets/css/buttons.css" />
+    <link href="https://cdn.jsdelivr.net/npm/typeface-poppins@1.1.13/index.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous" />
+</head>
+
+<body>
+    <div id="root">
+        <section class="d-flex justify-content-center align-items-center flex-1">
+            <div id="loginform">
+                <div class="d-flex dashboard-login justify-content-center flex-wrap">
+                    <div class="dashboard-login__header gap-2 d-flex flex-column pe-5 pt-0">
+                        <header class="dashboard-login__title">Health Connector</header>
+                        <header class="dashboard-login__subtitle">
+                            Login into your Account
+                        </header>
+                    </div>
+                    <div class="dashboard-login__form d-flex flex-column gap-3">
+                        <div class="d-flex flex-column">
+                            <label class="dashboard-login__input-label" for="username">Username</label>
+                            <input class="dashboard-login__input" type="Email" id="email" name="email"
+                                placeholder="Username" tabindex="0" aria-label="Username" required />
+                            <div id="warning"></div>
+                        </div>
+                        <div class="d-flex flex-column">
+                            <label class="dashboard-login__input-label" for="password">Password</label>
+                            <div class="dashboard-login__input d-flex align-items-center">
+                                <input class="dashboard-login-password__input flex-1" type="password" id="password"
+                                    name="password" placeholder="Password" required tabindex="0"
+                                    aria-label="Password" />
+                                <button type="button" id="toggleVisibilityButton" aria-label="toggle Password"
+                                    tabindex="0"></button>
+                            </div>
+                            <div id="warning"></div>
+                        </div>
+                        <div class="d-flex dashboard-login__button flex-1">
+                            <button id="login" class="button-primary flex-1 d-flex justify-content-center" type="submit"
+                                aria-label="Login" tabindex="0">
+                                Login
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <footer class="d-flex justify-content-between flex-wrap gap-2 align-items-center">
+            <div class="d-flex align-items-start gap-2 flex-wrap p-1">
+                <p class="footer-text-content text-nowrap m-0">
+                    Health Connector is a product of
+                </p>
+                <div class="d-flex p-1">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="15" height="14" viewBox="0 0 15 14" fill="none">
+                        <path
+                            d="M7.64054 0.675309C-3.45241 1.16035 0.801424 13.3293 0.801424 13.3293C3.04698 11.0867 6.07763 9.80685 9.25089 9.76099H9.26544C9.71186 9.73674 10.1576 9.81911 10.5659 10.0013C10.9742 10.1835 11.3332 10.4602 11.6134 10.8087C11.8935 11.1571 12.0866 11.5672 12.1768 12.0051C12.267 12.443 12.2517 12.8961 12.132 13.3269C12.132 13.3269 15.4118 9.49018 13.5872 5.1175C13.2159 4.33696 12.6256 3.6812 11.8883 3.23009C11.151 2.77897 10.2984 2.55196 9.4344 2.57668C8.74416 2.58039 8.06116 2.71765 7.42308 2.98089C7.14232 3.06067 6.88042 3.19596 6.65286 3.37874C6.4253 3.56152 6.23672 3.78809 6.09826 4.04503C5.9598 4.30197 5.87428 4.58408 5.84676 4.87465C5.81924 5.16523 5.85028 5.45837 5.93804 5.73674C6.05071 5.96373 6.22634 6.15349 6.44394 6.28337C6.66154 6.41324 6.91193 6.47774 7.1652 6.46916C7.25209 6.46916 7.33885 6.46241 7.4247 6.44895C9.03262 6.19673 9.68824 5.4538 10.0593 5.4538C10.1111 5.4531 10.1616 5.47023 10.2024 5.50231C10.4392 5.68581 10.2121 6.43925 8.15388 7.26706C7.41502 7.54564 6.63305 7.69257 5.84346 7.70117C4.79253 7.70117 3.76019 7.38347 3.41339 6.32688C2.76828 4.36245 5.08274 2.00999 8.56051 1.73756C8.73674 1.7222 8.97603 1.71492 9.14256 1.71492C10.4804 1.71453 11.7762 2.18211 12.8055 3.03667C12.2971 2.27067 11.598 1.65031 10.7769 1.23668C9.95589 0.823045 9.04128 0.630406 8.12316 0.677735C8.12316 0.677735 7.92187 0.669651 7.63812 0.677735"
+                            fill="#E4610E" />
+                    </svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="68" height="13" viewBox="0 0 68 13" fill="none">
+                        <path
+                            d="M23.2303 12.2598H21.1155L17.6863 8.36411H15.3039V12.2598H13.5012V0.989824H18.7493C19.2577 0.947834 19.7693 1.01217 20.2515 1.17874C20.7337 1.34531 21.1759 1.61047 21.5499 1.95731C21.924 2.30416 22.2218 2.72511 22.4242 3.19334C22.6267 3.66158 22.7294 4.16685 22.7259 4.67697C22.7766 5.54585 22.4847 6.39999 21.9128 7.05608C21.3409 7.71217 20.5346 8.11792 19.6669 8.18626L23.2303 12.2598ZM15.308 2.63251V6.72143H18.7364C19.015 6.753 19.297 6.72383 19.5632 6.63593C19.8294 6.54803 20.0734 6.4035 20.2784 6.21227C20.4834 6.02104 20.6445 5.78766 20.7506 5.52821C20.8568 5.26875 20.9054 4.98937 20.8932 4.7093C20.9038 4.4282 20.855 4.14803 20.7502 3.88697C20.6455 3.62591 20.487 3.3898 20.285 3.19396C20.0831 2.99812 19.8422 2.84694 19.5781 2.75021C19.314 2.65349 19.0324 2.61338 18.7518 2.63251H15.308Z"
+                            fill="black" />
+                        <path
+                            d="M48.3663 0.989502C52.2135 0.989502 53.9685 3.74213 54.017 6.52709C54.0739 7.28739 53.9674 8.05107 53.7046 8.7668C53.4419 9.48253 53.029 10.1337 52.4938 10.6767C51.9585 11.2196 51.3132 11.6417 50.6013 11.9146C49.8894 12.1874 49.1273 12.3048 48.3663 12.2587H44.0995V0.989502H48.3663ZM45.8869 10.5198H48.3663C48.894 10.5494 49.4218 10.4648 49.9139 10.2718C50.4059 10.0787 50.8504 9.78179 51.2172 9.40122C51.5839 9.02065 51.8642 8.56542 52.0389 8.06661C52.2137 7.5678 52.2787 7.03716 52.2296 6.51092C52.2498 6.00109 52.1632 5.49267 51.9753 5.01828C51.7875 4.5439 51.5025 4.11403 51.1387 3.75626C50.7749 3.3985 50.3404 3.12073 49.8629 2.94079C49.3855 2.76086 48.8757 2.68272 48.3663 2.71141H45.8869V10.5198Z"
+                            fill="black" />
+                        <path d="M57.1836 0.989502H55.397V12.2587H57.1836V0.989502Z" fill="black" />
+                        <path
+                            d="M66.1294 3.48559C65.794 3.07504 65.3679 2.74796 64.8846 2.5301C64.4013 2.31224 63.8741 2.20956 63.3444 2.23013C61.831 2.23013 60.7365 2.85826 60.7365 3.93668C60.7365 5.03126 61.992 5.33684 63.473 5.54702C65.7915 5.87039 68 6.51307 68 9.04015C67.9847 11.5672 65.6823 12.5163 63.3315 12.5163C61.1746 12.5163 59.5166 11.8566 58.4859 9.95688L59.8383 9.05551C60.2043 9.64977 60.7229 10.135 61.3401 10.4608C61.9573 10.7865 62.6505 10.9408 63.3476 10.9076C64.7001 10.9076 66.1973 10.4565 66.1973 9.04015C66.1973 7.81703 64.8933 7.39828 63.3153 7.1889C61.0777 6.88251 58.9499 6.31905 58.9499 3.90434C58.9337 1.57047 61.2684 0.670715 63.2967 0.670715C64.9224 0.670715 66.5489 1.05713 67.5004 2.57047L66.1294 3.48559Z"
+                            fill="black" />
+                        <path
+                            d="M12.882 12.2587L7.82706 0.989502H5.86344L0.805237 12.2587H2.72197L6.84485 2.88845L9.20135 8.24899H5.47541L4.75188 9.89167H9.92569L10.9661 12.2587H12.882Z"
+                            fill="black" />
+                        <path
+                            d="M38.4212 0.989367H36.4576L33.1771 8.29898C32.9457 8.76469 32.6514 9.19637 32.3024 9.58192C31.4988 10.3508 30.4323 10.7844 29.3202 10.7945C28.769 10.833 28.2159 10.7536 27.6978 10.5616C27.1796 10.3696 26.7084 10.0694 26.3154 9.68095C25.9224 9.29253 25.6166 8.82483 25.4186 8.30901C25.2205 7.79318 25.1346 7.24107 25.1666 6.68944C25.1326 6.1337 25.2165 5.57705 25.4128 5.05602C25.6091 4.53499 25.9134 4.06134 26.3056 3.66615C26.6978 3.27096 27.1691 2.96315 27.6886 2.76292C28.2082 2.5627 28.7642 2.47457 29.3202 2.50432C30.4047 2.49444 31.4497 2.91072 32.2304 3.66358L33.4382 2.50432C32.899 1.96002 32.2566 1.52874 31.5487 1.23572C30.8407 0.942691 30.0815 0.793806 29.3153 0.797775C28.5266 0.754824 27.7378 0.877994 26.9997 1.15931C26.2617 1.44062 25.591 1.87381 25.031 2.43082C24.471 2.98783 24.0342 3.65624 23.749 4.39277C23.4638 5.12931 23.3364 5.91753 23.3751 6.70642C23.3913 9.66842 25.2264 12.4857 29.3153 12.4857C30.0966 12.5006 30.8732 12.3602 31.5999 12.0729C32.3266 11.7855 32.9891 11.3567 33.5489 10.8115C34.0391 10.2887 34.4383 9.68759 34.73 9.03301L34.8707 8.70965L35.2005 7.96026L37.4325 2.88508L39.789 8.24562H36.0631L35.3396 9.88831H40.5134L41.5538 12.2553H43.4713L38.4212 0.989367Z"
+                            fill="black" />
+                    </svg>
+                </div>
+                <p class="footer-text-conten m-0">© 2024 All Rights Reserved</p>
+            </div>
+            <div>
+                <p class="footer-text-content m-0">
+                    For more detail visit :
+                    <a class="text-dark text-decoration-none" href="https://www.arcadis.com">www.arcadis.com</a>
+                </p>
+            </div>
+        </footer>
+    </div>
+</body>
+
+</html>
