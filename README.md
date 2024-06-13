@@ -1,23 +1,12 @@
 # MOD-EHR
 
-<!-- Improved compatibility of back to top link: See: https://github.com/othneildrew/Best-README-Template/pull/73 -->
 <a name="readme-top"></a>
-
-<!-- [![Contributors][contributors-shield]][contributors-url]
-[![Forks][forks-shield]][forks-url]
-[![Stargazers][stars-shield]][stars-url]
-[![Issues][issues-shield]][issues-url]
-[![MIT License][license-shield]][license-url]
-[![LinkedIn][linkedin-shield]][linkedin-url] -->
 
 
 
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
-  <!-- <a href="https://github.com/othneildrew/Best-README-Template">
-    <img src="images/logo.png" alt="Logo" width="80" height="80">
-  </a> -->
 
   <h3 align="center">MOD-EHR</h3>
 
@@ -26,12 +15,6 @@
     <br />
     <a href="https://github.com/HIRTA-HC/MOD-EHR"><strong>Explore the docs »</strong></a>
     <br />
-    <!-- <br />
-    <a href="https://github.com/othneildrew/Best-README-Template">View Demo</a>
-    ·
-    <a href="https://github.com/othneildrew/Best-README-Template/issues/new?labels=bug&template=bug-report---.md">Report Bug</a>
-    ·
-    <a href="https://github.com/othneildrew/Best-README-Template/issues/new?labels=enhancement&template=feature-request---.md">Request Feature</a> -->
   </p>
 </div>
 
@@ -68,7 +51,7 @@
     <!-- <li><a href="#contributing">Contributing</a></li>
     <li><a href="#license">License</a></li> -->
     <li><a href="#reference-links">Reference Links</a></li>
-    <li><a href="#acknowledgments">Acknowledgments</a></li>
+    <!-- <li><a href="#acknowledgments">Acknowledgments</a></li> -->
   </ol>
 </details>
 
@@ -77,8 +60,6 @@
 <!-- ABOUT THE PROJECT -->
 ## Product Overview
 
-<!-- [![Medicaid][medicaid-diagram](https://example.com) -->
-
 
 ### Focus of the Product
 
@@ -86,9 +67,6 @@ The Heart of Iowa Regional Transit Agency (HIRTA) was awarded a Phase 2 agreemen
 
 Health Connector is an innovative solution that will address various bottlenecks associated with transportation access to healthcare for HIRTA communities. Some of these challenges are key reasons behind missed appointments or the unacceptable level of preventive or as-needed healthcare in the HIRTA service area.
 
-The MOD-Medicaid Middleware is an open-source middleware product developed as part of Health Connector that allows data exchange between the HIRTA's transportation management system (MOD Platform TMS) and the State of Iowa Medicaid broker system. The Medicaid broker system uses Access2Care, which provides Non-Emergency Medical Transportation (NEMT) services to Medicaid and Medicare members, allowing Medicaid-funded trips to be provided through HIRTA's Health Connector for eligible Travelers. The middleware utilizes  bi-directional APIs provided by Via in the MOD Platform TMS and the Medicaid broker through Access2Care, who’s data is accessible via an API provided by Lyft. A translation engine is used at both API end points to translate data available from the APIs to a standardized data schema, enabling the data exchange by the middleware application.
-
-The MOD-EHR Middleware is an open-source middleware product that allows data from HIRTA's transportation management system (MOD Platform TMS) and the EHR Software system to be stored, aggregated and displayed in a central location. The purpose of this middleware product is to allow both the transportation provider and healthcare staff to monitor, manage, and ensure all patients have access to transportation to and from medical appointments. The middleware will use the bi-directional APIs provided by Via as part of the MOD Platform TMS and an EHR software provider, such as Epic, to implement the data flows described below. A translation engine is used at both API end points to translate data available from the APIs to a standardized data schema.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -98,8 +76,8 @@ The MOD-EHR Middleware is an open-source middleware product that allows data fro
 
 The following vendors were involved in the development of this product:
 
-* [Via](https://ridewithvia.com/): Provider of the transportation management software (TMS) used by HIRTA for booking and managing ride operations.
-* EHR provider (to be added), such as Epic EHR or Allscripts/Veradigm
+* [Via](https://ridewithvia.com/): Provider of the transportation management software (MOD Platform TMS) used by HIRTA for booking and managing ride operations.
+* EHR provider (to be added), such as Epic EHR or Veradigm.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -110,18 +88,16 @@ The intended audience for this middleware product includes, but is not limited t
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 
-
 <!-- GETTING STARTED -->
 ## Product Design
 
-The diagram below details the exchange of data between the TMS (provided by Via)
- and the Medicaid broker's trip API (provided by Lyft).
+The diagram below details the exchange of data between the MOD Platform TMS, EHR API (once available) and the EHR Middleware. Currently, the data flows that are shown coming from the EHR API are collected via a webform built into the EHR middleware product.
 
 ![EHR](/images/EHR.png)
 
 ### Data Access
 
-The middleware accesses rider and trip data through the MOD Platform TMS API (Via) and will access medical appointment data through the EHR API when available. Currently, medical appointment data is entered into the EHR webpage in a format that mimicks what will be expected through the EHR software. Steps to access these APIs and further documentation are described below.
+The middleware accesses rider and trip data through the MOD Platform TMS API and will access medical appointment data through the EHR API when available. Currently, medical appointment data is entered into the EHR webpage in a format that mimicks what will be expected through the EHR software. Steps to access these APIs and further documentation are described below.
 
 #### Via
 
@@ -132,14 +108,47 @@ The [ViaAPI](https://developer.ridewithvia.com/) is used to book and manage ride
 3. Provide secure URL for webhooks to receive status change updates and set up a listener port for the URL.
 4. Get access to the VOC for testing API calls and status updates.
 
+#### EHR
+
+For the MOD-EHR middleware, an administrator is required to generate their own public/private key and share the public key in its application management portal.
+
+1. Epic requires users to load a public key in its application manager portal.
+2. Veradigm requires a JWKS to access the public key and the appropriate URL submitted to its application portal.
+3. For the MOD-EHR middleware, a user needs to sign a JSON Web Token (JWT) with the user's private key.
+
 ### Data Management & Storage
 
-The diagram below details how data is managed and stored in AWS.
+The diagrams below show the data management and storage flows in non-AWS (Flask) and AWS based environments.
+
+![Flask-EHR](/images/Flask-EHR.png)
+
+*Data management and storage flows using a non-AWS (Flask) environment*
 
 ![AWS-EHR](/images/AWS-EHR.png)
+
+*Data management and storage flows in the AWS environment*
 <!-- ### Data Storage -->
 
 <!-- ### User Interface -->
+
+### User Interface
+
+
+![EHR-login](/images/EHR_login.PNG)
+
+*Login screen for EHR webpage. Login credentials will be available for HIRTA operations staff and healthcare staff*
+
+![Add Appointment](/images/add-appointment.PNG)
+
+*Form to input healthcare appointment information (mimicking EHR system appointment data)*
+
+![Not Confirmed](/images/not-confirmed.PNG)
+
+*Appointment information appears on webpage indicating that there is no associated ride for the appointment*
+
+![Ride Confirmed](/images/ride-confirmed.PNG)
+
+*Ride information is matched to appointment booking information, indicating patient has transportation to their appointment*
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -148,15 +157,22 @@ The diagram below details how data is managed and stored in AWS.
 <!-- USAGE EXAMPLES -->
 ## Tech Stack
 
-This section should list any major frameworks/libraries used to bootstrap your project. Leave any add-ons/plugins for the acknowledgements section. Here are a few examples.
+Non-AWS Deployment:
+* Execution Environment: Python 3.12 running Flask
+* Database: Configurable for any relational database that is supported by SQLAlchemy (SQLite, MySQL, Microsoft SQL Server, Oracle) with no specific database dependencies. As built: SQLite
+* Storage: Flask: Served from internal storage
+* Authentication: Flask-Oauth2 library using OAuth2
+* API Management: Flask
+* Domain/DNS: N/A
+
+AWS Deployment:
 
 * Execution Environment: AWS Lambda running Python 3.12
 * Database: AWS DynamoDB
 * Storage: AWS S3 with AWS CloudFront CDN
 * Authentication: AWS Cognito
 * API Management: AWS API Gateway
-* Domain/DNS AWS Route 53
-
+* Domain/DNS: AWS Route 53
 
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
@@ -166,36 +182,26 @@ This section should list any major frameworks/libraries used to bootstrap your p
 <!-- ROADMAP -->
 ## Deployment
 
-This specific deployment of the EHR Middleware product utilizes ViaAPI for the MOD Platform TMS endpoints and a custom webpage for the EHR endpoint. The following deployment steps have been generalized to be applicable for use with any TMS and/or EHR provider.
-
-### Hardware
-
-_Insert required hardware_
+This specific deployment of the EHR Middleware product utilizes ViaAPI for the MOD Platform TMS endpoints and a custom webpage to mimick the EHR endpoint. The following deployment steps have been generalized to be applicable for use with any TMS and/or EHR provider.
 
 ### Cloud Infrastructure
 
-The following tables describes the cloud-based environment and libraries required to deploy the Medicaid middleware product.
+The following tables describes the cloud-based environment and libraries required to deploy the EHR middleware product.
 
 ![cloud-services-diagram](/images/cloud-services.png)
 
 ### Software Environment
 
-_Update steps below for specific deployment of each codebase_
+#### Non-AWS installation
 
-1. Get a free API Key at [https://example.com](https://example.com)
-2. Clone the repo
+1. Generate public/private keys as described under [Data Access](href="#data-access").
+2. Install required libraries:
    ```sh
-   git clone https://github.com/your_username_/Project-Name.git
+   pip install Flask
+   pip install Flask-OAuth
+   pip install SQLAlchemy
+   pip install Waitress
    ```
-3. Install NPM packages
-   ```sh
-   npm install
-   ```
-4. Enter your API in `config.js`
-   ```js
-   const API_KEY = '<ENTER YOUR API>';
-   ```
-
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 
@@ -224,10 +230,14 @@ USDOT ITS4US: [https://www.its.dot.gov/its4us/index.htm](https://www.its.dot.gov
 
 
 <!-- MARKDOWN LINKS & IMAGES -->
-<!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
 [EHR]: images/EHR.png
 [AWS-EHR]: images/AWS-EHR.PNG
+[Flask-EHR]: images/Flask-EHR.PNG
+[EHR-login]: images/AWS_login.PNG
 [cloud-services-diagram]: images/cloud-services.png
+[Add Appointment]: images/add-appointment.PNG
+[Not Confirmed]: images/not-confirmed.PNG
+[Ride Confirmed]: images/ride-confirmed.PNG
 [python.org]: https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54
 [python-url]: https://www.python.org/
 [aws.amazon.com]: https://img.shields.io/badge/AWS-232F32?style=for-the-badge&logo=AmazonAWS&logoColor=white
