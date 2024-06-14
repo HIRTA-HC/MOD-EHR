@@ -13,8 +13,12 @@ $(document).ready(async function () {
     preRender();
     $("#logout").click(logoutUser);
     const userRole = await getUserGroup();
-    if (userRole !== "AppointmentsAdmin") {
-        window.location.href = "dashboard.html";
+    if (userRole !== "AppointmentsAdmin" && userRole !== "UserManagementAdmin") {
+          window.location.href = "dashboard.html";
+    }
+    if (userRole === "UserManagementAdmin") {
+        $("#user-management-nav").removeClass("invisible")
+        $("#user-management-nav").addClass("visible")
     }
     $("#appointmentForm").validate({
         rules: {

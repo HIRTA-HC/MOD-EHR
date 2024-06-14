@@ -193,8 +193,12 @@ $(document).ready(async function () {
         if (event.keyCode === 13 ) { event.preventDefault() };
     });
     const userRole = await getUserGroup();
-    if (userRole !== "AppointmentsAdmin") {
+    if (userRole !== "AppointmentsAdmin" && userRole !== "UserManagementAdmin") {
         window.location.href = "dashboard.html";
+    }
+    if (userRole === "UserManagementAdmin") {
+        $("#user-management-nav").removeClass("invisible")
+        $("#user-management-nav").addClass("visible")
     }
     $("#appointmentForm").validate({
         rules: {
