@@ -1,12 +1,18 @@
+import os
+
 import boto3
 from botocore.exceptions import ClientError
 
 
 class KMSClient:
+    environment = os.getenv("ENVIRONMENT", "development").lower()
+
     def __init__(self):
         self.client = boto3.client("secretsmanager")
 
     def get_secret_value(self, secret_id):
+        secret_id = f"{self.environment}-{secret_id}"
+        print(secret_id)
         try:
             response = self.client.get_secret_value(SecretId=secret_id)
             return response["SecretString"]

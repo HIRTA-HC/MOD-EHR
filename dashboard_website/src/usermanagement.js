@@ -66,23 +66,7 @@ async function addUserToGroup(username, group) {
         });
     })
 }
-async function getUser(username) {
-    return new Promise((resolve, reject) => {
-        const user_params = {
-            UserPoolId: COGNITO_PARAMS.UserPoolId,
-            Username: username
-        }
-        cognitoIdentityServiceProvider.adminGetUser(user_params, (err, data) => {
-            if (err) {
-                $("#root").append(
-                    `<div id="customAlert" class="custom-alert-danger"><div class="flex-1">${err.message}</div></div>`
-                );
-                resolve(false);
-            }
-            resolve(data)
-        });
-    })
-}
+
 async function changePassword(username, password) {
     return new Promise((resolve, reject) => {
         cognitoIdentityServiceProvider.adminSetUserPassword({
@@ -132,7 +116,14 @@ async function addUserToCognito() {
                         resolve(false)
                     }
                     $("#addUserModal").hide()
-                    $("#appointmentForm").trigger("reset");
+                    $("#root").append(
+                        `<div id="customAlert" class="custom-alert-success"><div class="flex-1">User added successfully</div></div>`
+                    );
+                    setTimeout(function () {
+                        $("#customAlert").remove();
+                        $("#appointmentForm").trigger("reset");
+                        window.location.reload();
+                    }, 1000);
                     resolve(true)
 
                 }
@@ -234,6 +225,9 @@ $(document).ready(async function () {
     $("#logout").click(logoutUser);
 
     const userRole = await getUserGroup();
+    if (userRole !== "UserManagementAdmin") {
+        window.location.href = "dashboard.html";
+    }
     $(".closeChangePass").click(closeChangePassModal)
     $(".closeAdduser").click(closeUserModal)
     $("#add-user").click(addUserButtonAction);

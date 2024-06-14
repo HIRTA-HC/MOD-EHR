@@ -31,11 +31,6 @@
     <script src="appointments.js"></script>
     <script src="common.js"></script>
     <script src="settingspanel.js"></script>
-    <script
-      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyANCIsb2avj0G07Cdvb3LMcAsgK1coFE54&libraries=places&callback=googleMapsAutoComplete"
-      async
-      defer
-    ></script>
     <script type="text/javascript">
       function googleMapsAutoComplete() {
         let input_field = document.getElementById("location");
@@ -75,11 +70,9 @@
                   >Appointments</a
                 >
               </li>
-              <li id="user-management-nav">
-                <a class="nav-item" href="userManagement.html"
-                  >User Management</a
-                >
-              </li>
+            <li id="user-management-nav" class="invisible">
+                <a class="nav-item" href="userManagement.html">User Management</a>
+            </li>
             </ul>
           </div>
         </div>

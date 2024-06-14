@@ -2,7 +2,12 @@ import contextlib
 from datetime import datetime, timezone
 from functools import cached_property
 
-from health_connector_base.constants import DIFF_MATCH_IN_SEC, MOCK_DATA, VIA_RIDE_MOCK
+from health_connector_base.constants import (
+    DIFF_MATCH_IN_SEC,
+    LOCATION_DIFF,
+    MOCK_DATA,
+    VIA_RIDE_MOCK,
+)
 from health_connector_base.location_manager import LocationManager
 from health_connector_base.models import Appointment, Dashboard, Patient, Settings
 from health_connector_base.smart_epic import JWTHelper, SmartEpicClient
@@ -21,14 +26,14 @@ class AppointmentsMapperWithVia:
     @cached_property
     def prior_period(self):
         with contextlib.suppress(Settings.DoesNotExist):
-            return int(Settings.get("prior_period")) * 60
+            return int(Settings.get("prior_period").value) * 60
         return DIFF_MATCH_IN_SEC
 
     @cached_property
     def subsequent_period(self):
         with contextlib.suppress(Settings.DoesNotExist):
-            return int(Settings.get("subsequent_period")) * -60
-        return 900
+            return int(Settings.get("subsequent_period").value) * -60
+        return -900
 
     def patient_mapping(self) -> dict:
         """
@@ -76,24 +81,27 @@ class AppointmentsMapperWithVia:
         """
         match_ride = {}
         prev_diff = 1e9
-        location_diff = 1e9
+        prev_location_diff = 1e9
         for trip in trips:
-            cur_diff = appointment_start_time - trip["dropoff_eta"]
-            cur_location_diff = LocationManager().get_distance_from_address_coords(
-                address,
-                [
-                    trip.get("dropoff", {}).get("lat", 0),
-                    trip.get("dropoff", {}).get("lng", 0),
-                ],
+            cur_diff = int(appointment_start_time - trip["dropoff_eta"])
+            cur_location_diff = int(
+                LocationManager().get_distance_from_address_coords(
+                    address,
+                    [
+                        trip.get("dropoff", {}).get("lat", 0),
+                        trip.get("dropoff", {}).get("lng", 0),
+                    ],
+                )
             )
             if (
                 self.subsequent_period <= cur_diff <= self.prior_period
                 and cur_diff < prev_diff
-                and cur_location_diff <= location_diff
+                and cur_location_diff <= LOCATION_DIFF
+                and cur_location_diff <= prev_location_diff
             ):
                 prev_diff = cur_diff
                 match_ride = trip
-                location_diff = cur_location_diff
+                prev_location_diff = cur_location_diff
         return match_ride
 
     def _map_participants_data(

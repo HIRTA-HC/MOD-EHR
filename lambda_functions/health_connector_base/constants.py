@@ -88,7 +88,7 @@ VIA_RIDE_MOCK = {
 
 DIFF_MATCH_IN_SEC = 1.5 * 60 * 60  # one 1/2 hr
 MOCK_DATA = os.environ.get("MOCK_DATA", True)
-
+LOCATION_DIFF = 1  # km
 STRINGS = {
     "INVALID_ADDRESS": "Address is not valid",
     "CHOICE_INVALID": "Value '%(value)s' is not one of the valid choices",

@@ -11,11 +11,15 @@ import {
 $(document).ready(async function () {
     preRender();
     const userRole = await getUserGroup();
-    if (userRole === "AppointmentsAdmin") {
+    if (userRole === "AppointmentsAdmin" || userRole === "UserManagementAdmin") {
         $("#appointments-nav").removeClass("invisible")
         $("#appointments-nav").addClass("visible")
         $("#patients-nav").removeClass("invisible")
         $("#patients-nav").addClass("visible")
+    }
+    if (userRole === "UserManagementAdmin") {
+        $("#user-management-nav").removeClass("invisible")
+        $("#user-management-nav").addClass("visible")
     }
     $("#logout").click(logoutUser);
     const accessToken = await getAccessToken();
@@ -36,7 +40,7 @@ $(document).ready(async function () {
                 { data: "drop_off_time", title: "Drop Off Time" },
                 { data: "driver_vehicle_info", title: "Driver/Vehicle" },
             ];
-            if (userRole === "HIRTAOperationsStaff") {
+            if (userRole === "HIRTAOperationsStaff" || userRole === "AppointmentsAdmin" || userRole === "UserManagementAdmin") {
                 columns_data.push(
                     { data: "pick_up_note", title: "Pick Up Note" },
                     { data: "pickup_spot", title: "Pick Up Spot" },
@@ -50,20 +54,20 @@ $(document).ready(async function () {
                 let driver_name =
                     "driver_info" in appointmentRecord["ride"]
                         ? (
-                              appointmentRecord["ride"]["driver_info"][
-                                  "first_name"
-                              ] +
-                              " " +
-                              appointmentRecord["ride"]["driver_info"][
-                                  "last_name"
-                              ]
-                          ).trim()
+                            appointmentRecord["ride"]["driver_info"][
+                            "first_name"
+                            ] +
+                            " " +
+                            appointmentRecord["ride"]["driver_info"][
+                            "last_name"
+                            ]
+                        ).trim()
                         : "";
                 let vehicle_number =
                     "vehicle_info" in appointmentRecord["ride"]
                         ? appointmentRecord["ride"]["vehicle_info"][
-                              "license_plate"
-                          ].trim()
+                            "license_plate"
+                        ].trim()
                         : "";
                 let driver_vehicle_info =
                     driver_name == "" && vehicle_number == ""
@@ -75,40 +79,40 @@ $(document).ready(async function () {
                         appointmentRecord["start_time"] == "TBD"
                             ? "TBD"
                             : new Date(
-                                  appointmentRecord["start_time"] * 1000
-                              ).toLocaleString("en-US", {
-                                  timeZone: "America/Chicago",
-                              }),
+                                appointmentRecord["start_time"] * 1000
+                            ).toLocaleString("en-US", {
+                                timeZone: "America/Chicago",
+                            }),
                     appointment_location: appointmentRecord["location"],
                     appointment_status: appointmentRecord["status"],
                     trip_status:
                         appointmentRecord["ride"]["trip_status"] ==
-                        "Not Requested"
+                            "Not Requested"
                             ? "<span class='lozenge-danger'>Not Requested</span>"
                             : "<span class='lozenge-success'>" +
-                              appointmentRecord["ride"]["trip_status"] +
-                              "</span>",
+                            appointmentRecord["ride"]["trip_status"] +
+                            "</span>",
                     pickup_time:
                         appointmentRecord["ride"]["pickup_eta"] == "TBD"
                             ? "N/A"
                             : new Date(
-                                  appointmentRecord["ride"]["pickup_eta"] * 1000
-                              ).toLocaleString("en-US", {
-                                  timeZone: "America/Chicago",
-                              }),
+                                appointmentRecord["ride"]["pickup_eta"] * 1000
+                            ).toLocaleString("en-US", {
+                                timeZone: "America/Chicago",
+                            }),
                     drop_off_time:
                         appointmentRecord["ride"]["dropoff_eta"] == "TBD"
                             ? "N/A"
                             : new Date(
-                                  appointmentRecord["ride"]["dropoff_eta"] *
-                                      1000
-                              ).toLocaleString("en-US", {
-                                  timeZone: "America/Chicago",
-                              }),
+                                appointmentRecord["ride"]["dropoff_eta"] *
+                                1000
+                            ).toLocaleString("en-US", {
+                                timeZone: "America/Chicago",
+                            }),
                     driver_vehicle_info: driver_vehicle_info,
                 };
 
-                if (userRole === "HIRTAOperationsStaff") {
+                if (userRole === "HIRTAOperationsStaff" || userRole === "AppointmentsAdmin" || userRole === "UserManagementAdmin") {
                     row_data["pick_up_note"] =
                         "notes" in appointmentRecord["ride"]["pickup"]
                             ? appointmentRecord["ride"]["pickup"]["notes"]
@@ -131,10 +135,10 @@ $(document).ready(async function () {
 
             var SearchIcon = $(
                 '<span id="searchIconSvg">' +
-                    '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">' +
-                    '<path d="M16.6666 16.6667L13.4444 13.4445M15.1851 9.25927C15.1851 12.5321 12.532 15.1852 9.25918 15.1852C5.98638 15.1852 3.33325 12.5321 3.33325 9.25927C3.33325 5.98647 5.98638 3.33334 9.25918 3.33334C12.532 3.33334 15.1851 5.98647 15.1851 9.25927Z" stroke="#374151" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>' +
-                    "</svg>" +
-                    "</span>"
+                '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">' +
+                '<path d="M16.6666 16.6667L13.4444 13.4445M15.1851 9.25927C15.1851 12.5321 12.532 15.1852 9.25918 15.1852C5.98638 15.1852 3.33325 12.5321 3.33325 9.25927C3.33325 5.98647 5.98638 3.33334 9.25918 3.33334C12.532 3.33334 15.1851 5.98647 15.1851 9.25927Z" stroke="#374151" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>' +
+                "</svg>" +
+                "</span>"
             );
             console.log(userRole);
 
