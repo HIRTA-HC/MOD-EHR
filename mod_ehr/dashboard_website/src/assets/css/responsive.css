@@ -1,0 +1,67 @@
+@import url(variables.css);
+
+:root {
+  --breakpoint-extra-small: 576px;
+  --breakpoint-small: 768px;
+  --breakpoint-medium: 992px;
+  --breakpoint-large: 1200px;
+}
+
+@media only screen and (max-width: 768px) {
+  .modal-dialog-wrapper {
+    width: 100%;
+    padding: 0 12px;
+  }
+  .logout-button-wrapper {
+    flex: 1;
+    display: flex;
+    justify-content: end;
+  }
+  .settings-dialog-wrapper {
+    width: 100%;
+    overflow: auto;
+    right: 0;
+  }
+  .settings-input-field {
+    width: 100%;
+    min-width: var(--settings-dialog-input-min-width);
+  }
+}
+
+@media only screen and (max-width: 992px) {
+  .nav-actions {
+    gap: var(--spacing-12);
+  }
+  
+  .top-nav-items{
+    padding-left: 0;
+  }
+}
+
+.side-nav-bar{
+    display: flex;
+    position: absolute;
+    right: 0;
+    background-color: white;
+    top: 0;
+    height: 100vh;
+    z-index: 5;
+    padding: var(--spacing-12);
+    gap: var(--spacing-12);
+    width: var(--side-navbar-width);
+    box-shadow: -2px 4px 12px 0px rgba(0, 0, 0, 0.11);
+    border-top-left-radius: var(--radius-12);
+    border-bottom-left-radius: var(--radius-12);
+    min-width: var(--search-bar-min-width);
+    flex-direction: column;
+    align-items: center;
+}
+
+.side-navbar-collapse{
+    padding-bottom: var(--spacing-12);
+    justify-content: flex-end;
+}
+
+.nav-actions{
+    gap: 0;
+}

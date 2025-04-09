@@ -1,0 +1,101 @@
+@import url(variables.css);
+
+.button-primary,
+.button-secondary,
+.button-default,
+.button-tertiary {
+  gap: var(--spacing-4);
+  justify-content: center;
+}
+
+.button-primary,
+.button-secondary,
+.button-default,
+.button-tertiary {
+  padding: var(--spacing-8) var(--spacing_16);
+  border-radius: var(--radius-8);
+  outline: none;
+  font-size: var(--font-small);
+  font-weight: var(--font-weight-medium);
+  line-height: var(--line-height-20);
+}
+
+.button-primary {
+  background-color: var(--brand-primary-color);
+  color: var(--background-color-BG-primary);
+  border: none;
+}
+
+.button-primary:hover {
+  background-color: var(--primary-button-hover-background-color);
+}
+
+.button-primary:focus-visible {
+  border: 1px solid white;
+  outline: 2px solid var(--brand-primary-active-color);
+}
+
+.button-primary:active {
+  background-color: var(--primary-button-background-color);
+}
+
+.button-secondary {
+  background-color: var(--background-color-BG-primary);
+  color: var(--brand-primary-color);
+  border: 1px solid var(--brand-primary-color);
+}
+
+.button-secondary:hover {
+  background-color: var(--secondary-button-hover-background-color);
+}
+
+.button-secondary:focus-visible {
+  border: 1px solid var(--brand-primary-active-color);
+  outline: 2px solid var(--brand-primary-active-color);
+}
+
+.button-secondary:active {
+  background-color: var(--secondary-button-active-background-color);
+}
+
+.button-primary:disabled,
+.button-secondary:disabled,
+.button-tertiary:disabled,
+.button-default:disabled {
+  opacity: 60%;
+  cursor: not-allowed;
+}
+
+.button-default {
+  background-color: var(--actions-default-bg);
+  color: var(--text-secondary);
+  border: none;
+}
+
+.button-default:hover,
+.button-tertiary:hover {
+  background-color: var(--background-secondary-bg);
+}
+
+.button-default:focus-visible {
+  outline: 2px solid var(--brand-primary-active-color);
+  border: 1px solid white;
+  background-color: white;
+}
+
+.button-default:active,
+.button-tertiary:active {
+  background-color: var(--base-gray-hex_300);
+}
+
+.button-tertiary {
+  background-color: transparent;
+  color: var(--text-secondary);
+  border: none;
+}
+
+.button-tertiary:focus-visible {
+  outline: 2px solid var(--brand-primary-active-color);
+  border: 1px solid white;
+  background-color: var(--background-secondary-bg);
+}

@@ -1,0 +1,9 @@
+services:
+  sftp-server:
+    image: atmoz/sftp
+    container_name: sftp-server
+    ports:
+      - "2222:22"
+    environment:
+      SFTP_USERS: "hirta:hirta123!:1001::hirta_files"  # No trailing slash
+    restart: always

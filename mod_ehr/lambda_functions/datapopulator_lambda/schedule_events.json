@@ -1,0 +1,13 @@
+{
+    "version": "0",
+    "id": "",
+    "detail-type": "Scheduled Event",
+    "source": "aws.events",
+    "account": "533267202293",
+    "time": "2024-08-27T12: 07: 26Z",
+    "region": "us-east-1",
+    "resources": [
+        ""
+    ],
+    "detail": {}
+}

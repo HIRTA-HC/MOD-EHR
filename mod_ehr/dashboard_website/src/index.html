@@ -1,0 +1,101 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script
+      src="https://code.jquery.com/jquery-3.7.1.min.js"
+      integrity=""
+      crossorigin="anonymous"
+    ></script>
+    <link rel="icon" type="image/x-icon" href="./assets/Fav-icon.png" />
+    <script type="module" src="index.js"></script>
+    <title>Health Connector Dashboard</title>
+    <link rel="stylesheet" href="./assets/css/styles.css" />
+    <link rel="stylesheet" href="./assets/css/responsive.css" />
+    <link rel="stylesheet" href="./assets/css/status.css" />
+    <link rel="stylesheet" href="./assets/css/buttons.css" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/typeface-poppins@1.1.13/index.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity=""
+      crossorigin="anonymous"
+    />
+  </head>
+
+  <body>
+    <div id="root">
+      <section class="d-flex justify-content-center align-items-center flex-1">
+        <div id="loginform">
+          <div class="d-flex dashboard-login justify-content-center flex-wrap">
+            <div
+              class="dashboard-login__header gap-2 d-flex flex-column pe-5 pt-0"
+            >
+              <header class="dashboard-login__title">Health Connector</header>
+              <header class="dashboard-login__subtitle">
+                Login into your Account
+              </header>
+            </div>
+            <div class="dashboard-login__form d-flex flex-column gap-3">
+              <div class="d-flex flex-column">
+                <label class="dashboard-login__input-label" for="username"
+                  >Username</label
+                >
+                <input
+                  class="dashboard-login__input"
+                  type="Email"
+                  id="email"
+                  name="email"
+                  placeholder="Username"
+                  tabindex="0"
+                  aria-label="Username"
+                  required
+                />
+              </div>
+              <div class="d-flex flex-column">
+                <label class="dashboard-login__input-label" for="password"
+                  >Password</label
+                >
+                <div
+                  class="dashboard-login__input d-flex align-items-center position-relative"
+                >
+                  <input
+                    class="dashboard-login-password__input flex-1"
+                    type="password"
+                    id="password"
+                    name="password"
+                    placeholder="Password"
+                    required
+                    tabindex="0"
+                    aria-label="Password"
+                  />
+                  <span id="password-toggler" class="eye-off-icon"></span>
+                </div>
+              </div>
+              <div class="d-flex dashboard-login__button flex-1">
+                <button
+                  id="login"
+                  class="button-primary flex-1 d-flex justify-content-center"
+                  type="submit"
+                  aria-label="Login"
+                  tabindex="0"
+                >
+                  Login
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <footer
+        class="d-flex justify-content-between flex-wrap gap-2 align-items-center"
+      >
+      </footer>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,38 @@
+{
+    "Records": [
+        {
+            "eventVersion": "2.1",
+            "eventSource": "aws:s3",
+            "awsRegion": "us-east-1",
+            "eventTime": "2024-08-27T11: 04: 33.562Z",
+            "eventName": "ObjectCreated:Put",
+            "userIdentity": {
+                "principalId": ""
+            },
+            "requestParameters": {
+                "sourceIPAddress": "10.0.153.87"
+            },
+            "responseElements": {
+                "x-amz-request-id": "",
+                "x-amz-id-2": ""
+            },
+            "s3": {
+                "s3SchemaVersion": "1.0",
+                "configurationId": "",
+                "bucket": {
+                    "name": "development-sftp-server-bucket",
+                    "ownerIdentity": {
+                        "principalId": ""
+                    },
+                    "arn": "arn:aws:s3: : :development-sftp-server-bucket"
+                },
+                "object": {
+                    "key": "appointments.csv",
+                    "size": 17427,
+                    "eTag": "",
+                    "sequencer": ""
+                }
+            }
+        }
+    ]
+}

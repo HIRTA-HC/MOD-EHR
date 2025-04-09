@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Health Connector</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.2.3/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/jquery.validate.min.js"></script>
+
+    <link rel="stylesheet" href="./assets/css/styles.css" />
+    <link rel="stylesheet" href="./assets/css/responsive.css" />
+    <link rel="stylesheet" href="./assets/css/status.css" />
+    <link rel="stylesheet" href="./assets/css/buttons.css" />
+    <link rel="stylesheet" href="./assets/css/skeletonLoader.css" />
+    <link rel="icon" type="image/x-icon" href="./assets/Fav-icon.png" />
+    <link href="https://cdn.jsdelivr.net/npm/typeface-poppins@1.1.13/index.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="" crossorigin="anonymous" />
+    <script src="https://kit.fontawesome.com/bcf925e6b3.js" crossorigin="anonymous"></script>
+    <script src="patients.js"></script>
+    <script src="common.js"></script>
+    <script src="settingspanel.js"></script>
+</head>
+
+<body>
+    <div id="root" class="p-0 overflow-auto">
+        <nav class="top-navb-bar">
+            <div class="d-flex flex-wrap flex-1 align-items-center">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="d-flex">
+                        <img src="./assets/Health-Connector-Logo.png" class="brand-logo" alt="brand-logo" />
+                    </div>
+                    <div class="top-nav-header-text">Health Connector</div>
+                </div>
+                <div class="d-flex d-lg-none flex-1 justify-content-end">
+                    <button class="button-tertiary navbar_toggler">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                            <path d="M4 6H20M4 12H20M4 18H20" stroke="#111827" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round" />
+                        </svg>
+                    </button>
+                </div>
+
+                <div class="d-flex justify-content-lg-between flex-1 d-none d-lg-flex" id="navitems_list">
+                    <div class="d-flex d-lg-none col-12 side-navbar-collapse">
+                        <button class="button-tertiary navbar_toggler">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16"
+                                fill="none">
+                                <path d="M1 15L15 1M15 15L1 1" stroke="#111827" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" />
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="d-flex align-items-center col-12 col-lg-6">
+                        <ul class="top-nav-items m-0 flex-column flex-lg-row w-100">
+                            <li>
+                                <a class="nav-item" aria-current="page" href="dashboard.html">Dashboard</a>
+                            </li>
+                            <li id="patients-nav">
+                                <a class="nav-item active" href="patients.html">Patients</a>
+                            </li>
+                            <li id="appointments-nav">
+                                <a class="nav-item" href="appointments.html">Appointments</a>
+                            </li>
+                            <li id="user-management-nav">
+                                <a class="nav-item" href="userManagement.html">User Management</a>
+                            </li>
+                            <li id="logs-nav">
+                                <a class="nav-item " href="logs.html">Logs</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div
+                        class="d-flex flex-column flex-lg-row justify-content-end align-items-stretch align-items-lg-center nav-actions col-12 col-lg-6">
+                        <button tabindex="0" class="button-tertiary navbar_toggler" id="settingsToggler">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16"
+                                fill="none">
+                                <path
+                                    d="M6.26344 12.9138L6.65307 13.79C6.7689 14.0509 6.95792 14.2725 7.19722 14.4281C7.43652 14.5836 7.71581 14.6664 8.00122 14.6663C8.28663 14.6664 8.56592 14.5836 8.80522 14.4281C9.04452 14.2725 9.23354 14.0509 9.34937 13.79L9.739 12.9138C9.8777 12.6028 10.111 12.3436 10.4057 12.173C10.7022 12.002 11.0452 11.9291 11.3857 11.9649L12.339 12.0663C12.6228 12.0964 12.9092 12.0434 13.1635 11.9139C13.4177 11.7844 13.629 11.5839 13.7716 11.3367C13.9144 11.0897 13.9824 10.8065 13.9674 10.5216C13.9524 10.2367 13.8551 9.96221 13.6871 9.73153L13.1227 8.95597C12.9217 8.67776 12.8143 8.34288 12.816 7.99967C12.816 7.6574 12.9244 7.32391 13.1257 7.04708L13.6901 6.27153C13.858 6.04084 13.9554 5.76639 13.9704 5.48146C13.9854 5.19653 13.9173 4.91337 13.7746 4.66634C13.632 4.41916 13.4207 4.21867 13.1664 4.08916C12.9121 3.95965 12.6257 3.90669 12.342 3.93671L11.3886 4.03819C11.0482 4.07395 10.7052 4.00109 10.4086 3.83004C10.1134 3.65851 9.88001 3.39791 9.74196 3.0856L9.34937 2.2093C9.23354 1.94846 9.04452 1.72682 8.80522 1.57127C8.56592 1.41573 8.28663 1.33296 8.00122 1.33301C7.71581 1.33296 7.43652 1.41573 7.19722 1.57127C6.95792 1.72682 6.7689 1.94846 6.65307 2.2093L6.26344 3.0856C6.1254 3.39791 5.89202 3.65851 5.59678 3.83004C5.30025 4.00109 4.95722 4.07395 4.61678 4.03819L3.66048 3.93671C3.3767 3.90669 3.09031 3.95965 2.83602 4.08916C2.58174 4.21867 2.37049 4.41916 2.22789 4.66634C2.0851 4.91337 2.01708 5.19653 2.03207 5.48146C2.04705 5.76639 2.14441 6.04084 2.31233 6.27153L2.87678 7.04708C3.07807 7.32391 3.18647 7.6574 3.18641 7.99967C3.18647 8.34195 3.07807 8.67544 2.87678 8.95227L2.31233 9.72782C2.14441 9.95851 2.04705 10.233 2.03207 10.5179C2.01708 10.8028 2.0851 11.086 2.22789 11.333C2.37063 11.5801 2.58191 11.7804 2.83615 11.9099C3.0904 12.0394 3.37672 12.0925 3.66048 12.0626L4.61381 11.9612C4.95426 11.9254 5.29729 11.9983 5.59381 12.1693C5.89017 12.3404 6.12462 12.601 6.26344 12.9138Z"
+                                    stroke="#374151" stroke-width="1.5" stroke-linecap="round"
+                                    stroke-linejoin="round" />
+                                <path
+                                    d="M8.00003 9.99967C9.1046 9.99967 10 9.10424 10 7.99967C10 6.89511 9.1046 5.99967 8.00003 5.99967C6.89546 5.99967 6.00003 6.89511 6.00003 7.99967C6.00003 9.10424 6.89546 9.99967 8.00003 9.99967Z"
+                                    stroke="#374151" stroke-width="1.5" stroke-linecap="round"
+                                    stroke-linejoin="round" />
+                            </svg>
+                            Settings
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16"
+                                fill="none">
+                                <path d="M4.66675 6L8.00008 9.33333L11.3334 6" stroke="#374151" stroke-width="1.5"
+                                    stroke-linecap="round" stroke-linejoin="round" />
+                            </svg>
+                        </button>
+                        <button id="logout" class="button-tertiary" aria-label="logout" tabindex="0">
+                            Logout
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16"
+                                fill="none">
+                                <path
+                                    d="M10.6667 11.3333L14 8M14 8L10.6667 4.66667M14 8H6M6 2H5.2C4.0799 2 3.51984 2 3.09202 2.21799C2.7157 2.40973 2.40973 2.71569 2.21799 3.09202C2 3.51984 2 4.07989 2 5.2V10.8C2 11.9201 2 12.4802 2.21799 12.908C2.40973 13.2843 2.71569 13.5903 3.09202 13.782C3.51984 14 4.0799 14 5.2 14H6"
+                                    stroke="#374151" stroke-width="1.5" stroke-linecap="round"
+                                    stroke-linejoin="round" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </nav>
+        <section class="dashBoard-body d-flex flex-column flex-1 gap-2">
+            <div class="flex-1 table-container d-flex flex-column gap-3 overflow-auto">
+                <div id="custom-table" class="d-flex flex-column flex-1 overflow-auto">
+                    <div class="module-header">
+                        <div class="module-header-text">Patients</div>
+                        <div class="d-flex gap-2">
+                            <button id="button-primary" class="add-patient button-primary position-relative"
+                                data-toggle="modal" data-target="#appointmentModal">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14"
+                                    fill="none">
+                                    <path d="M2 7H12M7 12V2" stroke="white" stroke-width="2.5" stroke-linecap="square"
+                                        stroke-linejoin="round" />
+                                </svg>
+                                Add Patient
+                            </button>
+                        </div>
+                    </div>
+                    <div id="table-filter"></div>
+                    <div id="tableContainer" class="flex-1 overflow-auto d-flex flex-column">
+                        <table id="mod_ehr" class="display">
+                            <thead></thead>
+                            <tbody></tbody>
+                        </table>
+                        <div class="d-flex justify-content-center align-items-center flex-1" id="StateChange">
+                            <div id="spinner" class="loader placement-center" role="status"></div>
+                        </div>
+                    </div>
+                </div>
+                <div id="custom-pagination"></div>
+            </div>
+        </section>
+        <section>
+            <div class="modal show" id="appointmentModal" tabindex="-1" role="dialog"
+                aria-labelledby="appointmentModalLabel" aria-hidden="true">
+                <div class="modal-dialog-wrapper placement-center m-0 position-absolute" role="document">
+                    <div class="modal-content border-0" id="borderRounded">
+                        <div class="modal-body p-0">
+                            <div class="module-header-text modal-header" id="button-primary">
+                                <div>Add Patient</div>
+                                <button class="modal-close-icon close">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 16 16"
+                                        fill="none">
+                                        <path d="M1.16667 12.8332L12.8333 1.1665M12.8333 12.8332L1.16667 1.1665"
+                                            stroke="white" stroke-width="1.66667" stroke-linecap="round"
+                                            stroke-linejoin="round" />
+                                    </svg>
+                                </button>
+                            </div>
+                            <div id="formContainer" class="flex-1 overflow-auto p-4">
+                                <form id="appointmentForm" class="d-flex flex-column gap-3 col-12">
+                                    <div>
+                                        <label for="patient_name" class="form-label skeleton-text">Patient Name <span
+                                                class="text-danger">*</span></label>
+                                        <input type="text" class="form-control" id="patient_name" name="patient_name"
+                                            required />
+                                    </div>
+                                    <div>
+                                        <label for="patient_id" class="form-label skeleton-text">Patient ID <span
+                                                class="text-danger">*</span></label>
+                                        <input type="text" class="form-control" id="patient_id" name="patient_id"
+                                            required />
+                                    </div>
+                                    <div>
+                                        <label for="via_rider_id" class="form-label skeleton-text ">
+                                            Via Rider ID <span class="text-danger">*</span></label>
+                                        <input type="text" class="form-control" id="via_rider_id" name="via_rider_id"
+                                            required />
+                                    </div>
+                                    <div>
+                                        <label for="provider" class="form-label skeleton-text">
+                                            Provider </label>
+                                        <select class="form-select skeleton-text" id="provider" name="provider" aria-label="Select an option">
+                                            <option value="epic">Epic</option> 
+                                            <option value="veradigm">Veradigm</option>
+                                        </select>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                        <div class="modal-footer" id="modal-footer">
+                            <button type="button" class="close button-secondary m-0" data-dismiss="modal">
+                                Close
+                            </button>
+                            <button id="button-primary" type="button" class="save button-primary m-0">
+                                Save
+                                <div class="loader-small d-none" />
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="position-absolute settings-dialog-wrapper bg-white shadow-sm border d-none" id="settingsModal"
+                tabindex="-1" role="dialog" aria-labelledby="settingsModalLabel" aria-hidden="true">
+                <div class="modal-body border-danger px-3 py-4">
+                    <form id="settingsForm">
+                        <table class="settings-form-table">
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <div class="d-flex flex-column">
+                                            <span class="skeleton-text form-label m-0 ">
+                                                Prior period to start time
+                                            </span>
+                                            <span class="form-label-help-text text-nowrap skeleton-text">
+                                                The ride that ends closest to the appointment start
+                                                time, or within <span id="prior_period_text">15</span> minutes
+                                                prior, will be matched.
+                                            </span>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="d-flex align-items-center gap-2">
+                                            <input type="number" class="form-control settings-input-field skeleton-text"
+                                                id="prior_period" name="patient_name" required min="15" placeholder="15"
+                                                value="15" />
+                                            <span> min </span>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div class="d-flex flex-column">
+                                            <span class="form-label m-0 skeleton-text">
+                                                Subsequent period after the start time
+                                            </span>
+                                            <span class="form-label-help-text text-nowrap skeleton-text">
+                                                The ride that ends closest to the appointment start
+                                                time, or within
+                                                <span id="subsequent_period_text">15</span> minutes
+                                                following it will be matched.
+                                            </span>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="d-flex align-items-center gap-2">
+                                            <input type="number" class="form-control settings-input-field skeleton-text"
+                                                id="subsequent_period" name="patient_name" required min="15"
+                                                placeholder="15" value="15" />
+                                            <span> min </span>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </form>
+                </div>
+
+                <div class="modal-footer" id="modal-footer">
+                    <button type="button" id="closeSettingsModal" class="close button-secondary m-0"
+                        data-dismiss="modal">
+                        Close
+                    </button>
+                    <button type="button" id="settings-form-submit-btn" class="save button-primary m-0"
+                        disabled>Save</button>
+                </div>
+            </div>
+        </section>
+    </div>
+</body>
+
+</html>
