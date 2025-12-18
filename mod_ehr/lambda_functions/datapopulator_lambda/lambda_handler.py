@@ -120,6 +120,8 @@ class AppointmentsMapperWithVia:
                     ],
                 )
             )
+            print(f"subsequent_period: {self.subsequent_period}, cur_diff: {cur_diff}, prior_period: {self.prior_period}")
+            print(f"cur_diff: {cur_diff}, prev_diff: {prev_diff}, cur_location_diff: {cur_location_diff}, prev_location_diff: {prev_location_diff}")
             if (
                 self.subsequent_period <= cur_diff <= self.prior_period
                 and cur_diff < prev_diff
@@ -129,6 +131,7 @@ class AppointmentsMapperWithVia:
                 prev_diff = cur_diff
                 match_ride = trip
                 prev_location_diff = cur_location_diff
+        print("Matched ride:", match_ride)
         return match_ride
 
     def _map_participants_data(
@@ -262,6 +265,7 @@ class AppointmentsMapperWithVia:
                 )
 
     def process_all(self, patient_mapping):
+        print("Processing all appointments")
         patient_trips = {}
         appointment_objs = []
         for appointment in Appointment.scan(
@@ -269,17 +273,32 @@ class AppointmentsMapperWithVia:
             & (Appointment.status == "Booked")
         ):
             if rider_id := patient_mapping["all"].get(appointment.patient_id):
+                print("rider_id:",rider_id)
                 start_time = int(appointment.start_time.timestamp())
                 trips = patient_trips.get(appointment.patient_id)
                 if trips is None:
                     trips = Via().get_trips(rider_id)
                     patient_trips[appointment.patient_id] = trips
-                appointment.ride = (
+                existing_ride = getattr(appointment, "ride", {}) or {}
+                new_ride = (
                     self.get_matching_ride(
                         appointment.location, trips.get("trips", []), start_time
                     )
                     or VIA_RIDE_MOCK
                 )
+                if (
+                    existing_ride 
+                    and new_ride 
+                    and existing_ride.get("trip_id") 
+                    and new_ride.get("trip_id") 
+                    and existing_ride["trip_id"] == new_ride["trip_id"]
+                ):
+                    
+                    if "driver_info" not in new_ride and "driver_info" in existing_ride:
+                        new_ride["driver_info"] = existing_ride["driver_info"]
+                    if "vehicle_info" not in new_ride and "vehicle_info" in existing_ride:
+                        new_ride["vehicle_info"] = existing_ride["vehicle_info"]
+                appointment.ride = new_ride
                 appointment_objs.append(appointment)
         with Appointment.batch_write() as batch:
             for appointment in appointment_objs:
@@ -316,12 +335,25 @@ class AppointmentsMapperWithViaMock(AppointmentsMapperWithVia):
                 if trips is None:
                     trips = Via().get_trips(rider_id)
                     patient_trips[appointment.patient_id] = trips
-                appointment.ride = (
+                existing_ride = getattr(appointment, "ride", {}) or {}
+                new_ride = (
                     self.get_matching_ride(
                         appointment.location, trips.get("trips", []), start_time
                     )
                     or VIA_RIDE_MOCK
                 )
+                if (
+                    existing_ride 
+                    and new_ride 
+                    and existing_ride.get("trip_id") 
+                    and new_ride.get("trip_id") 
+                    and existing_ride["trip_id"] == new_ride["trip_id"]
+                ):
+                    if "driver_info" not in new_ride and "driver_info" in existing_ride:
+                        new_ride["driver_info"] = existing_ride["driver_info"]
+                    if "vehicle_info" not in new_ride and "vehicle_info" in existing_ride:
+                        new_ride["vehicle_info"] = existing_ride["vehicle_info"]
+                appointment.ride = new_ride
                 appointment_objs.append(appointment)
         with Appointment.batch_write() as batch:
             for appointment in appointment_objs:
