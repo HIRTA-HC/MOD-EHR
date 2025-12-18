@@ -14,6 +14,26 @@ import {
   toggleSideNavBar,
   toggleSkeletonLoader,
 } from "./common";
+let cachedPatients = null;
+async function getCachedPatients(){
+    
+    if (cachedPatients) {
+        console.log("Serving patients from cache");
+        return cachedPatients;
+    }
+    console.log("Fetching patients into cache");
+    const accessToken = await getAccessToken();
+    const response = await fetch(`${BASE_URL}/api/patients/`, {
+        headers: { 'Authorization': accessToken }
+    });
+    
+    if (response.ok) {
+        cachedPatients = await response.json();
+        cachedPatients.sort((a, b) => a.name.localeCompare(b.name));
+    }
+    
+    return cachedPatients || [];
+}
 
 async function EditAppointment() {
     const accessToken = await getAccessToken();
@@ -22,57 +42,95 @@ async function EditAppointment() {
     });
     toggleSkeletonLoader("appointmentModal", "add");
     const id = $(this).data("id");
-    let xhr1 = new XMLHttpRequest();
-    xhr1.open("GET", `${BASE_URL}/api/patients/`);
-    xhr1.setRequestHeader("Authorization", accessToken);
-    xhr1.onreadystatechange = async function () {
-        if (xhr1.readyState === XMLHttpRequest.DONE && xhr1.status === 200) {
-            const patient_records = JSON.parse(xhr1.responseText);
-            await $("#patientName").empty();
-            for (let patient of patient_records) {
-                console.log(patient);
-                let option = $("<option>", {
-                    value: `${patient["name"]}-${patient["patient_id"]}`,
-                    text: `${patient["name"]} (${patient["patient_id"]})`,
-                });
-                $("#patientName").append(option);
-            }
-            let xhr = new XMLHttpRequest();
-            xhr.open(
-                "GET",
-                `${BASE_URL}/api/appointments/` + id
+    const appointmentData = JSON.parse(atob($(this).attr('data-appointment')));
+    console.log("appointmentData:", appointmentData);
+    try{
+        const patients = await getCachedPatients()
+
+        await $("#patientName").empty();
+        patients.forEach(patient => {
+            $("#patientName").append(
+                $("<option>", {
+                    value: `${patient.name}-${patient.patient_id}`,
+                    text: `${patient.name} (${patient.patient_id})`
+                })
             );
-            xhr.setRequestHeader("Authorization", accessToken);
-            xhr.onreadystatechange = function () {
-                if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
-                    toggleSkeletonLoader("appointmentModal", "remove");
-                    let appointment = JSON.parse(xhr.responseText);
-                    let start_time = new Date(appointment["start_time"]);
-                    start_time = formatInTimeZone(
-                        start_time,
-                        "America/Chicago",
-                        "yyyy-MM-dd'T'HH:mm:ss"
-                    );
-                    let end_time = new Date(appointment["end_time"]);
-                    end_time = formatInTimeZone(
-                        end_time,
-                        "America/Chicago",
-                        "yyyy-MM-dd'T'HH:mm:ss"
-                    );
-                    $("#patientName").val(
-                        `${appointment["patient_name"]}-${appointment["patient_id"]}`
-                    );
-                    $("#startTime").val(start_time);
-                    $("#endTime").val(end_time);
-                    $("#location").val(appointment["location"]);
-                    $("#status").val(appointment["status"]);
-                    $(".save").data("id", id);
-                }
-            };
-            xhr.send();
-        }
-    };
-    xhr1.send();
+        });
+        const start_time = formatInTimeZone(
+            new Date(appointmentData.start_time),
+            "America/Chicago",
+            "yyyy-MM-dd'T'HH:mm:ss"
+        );
+        const end_time = formatInTimeZone(
+            new Date(appointmentData.end_time),
+            "America/Chicago", 
+            "yyyy-MM-dd'T'HH:mm:ss"
+        );
+        $("#patientName").val(`${appointmentData.patient_name}-${appointmentData.patient_id}`);
+        $("#startTime").val(start_time);
+        $("#endTime").val(end_time);
+        $("#location").val(appointmentData.location);
+        $("#status").val(appointmentData.status); // Normalize status
+        
+        $(".save").data("id", id);
+
+    }catch (error) {
+        console.error("Error loading appointment:", error);
+        // Show error message
+    } finally {
+        toggleSkeletonLoader("appointmentModal", "remove");
+    }
+    // let xhr1 = new XMLHttpRequest();
+    // xhr1.open("GET", `${BASE_URL}/api/patients/`);
+    // xhr1.setRequestHeader("Authorization", accessToken);
+    // xhr1.onreadystatechange = async function () {
+    //     if (xhr1.readyState === XMLHttpRequest.DONE && xhr1.status === 200) {
+    //         const patient_records = JSON.parse(xhr1.responseText);
+    //         await $("#patientName").empty();
+    //         for (let patient of patient_records) {
+    //             console.log(patient);
+    //             let option = $("<option>", {
+    //                 value: `${patient["name"]}-${patient["patient_id"]}`,
+    //                 text: `${patient["name"]} (${patient["patient_id"]})`,
+    //             });
+    //             $("#patientName").append(option);
+    //         }
+    //         let xhr = new XMLHttpRequest();
+    //         xhr.open(
+    //             "GET",
+    //             `${BASE_URL}/api/appointments/` + id
+    //         );
+    //         xhr.setRequestHeader("Authorization", accessToken);
+    //         xhr.onreadystatechange = function () {
+    //             if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
+    //                 toggleSkeletonLoader("appointmentModal", "remove");
+    //                 let appointment = JSON.parse(xhr.responseText);
+    //                 let start_time = new Date(appointment["start_time"]);
+    //                 start_time = formatInTimeZone(
+    //                     start_time,
+    //                     "America/Chicago",
+    //                     "yyyy-MM-dd'T'HH:mm:ss"
+    //                 );
+    //                 let end_time = new Date(appointment["end_time"]);
+    //                 end_time = formatInTimeZone(
+    //                     end_time,
+    //                     "America/Chicago",
+    //                     "yyyy-MM-dd'T'HH:mm:ss"
+    //                 );
+    //                 $("#patientName").val(
+    //                     `${appointment["patient_name"]}-${appointment["patient_id"]}`
+    //                 );
+    //                 $("#startTime").val(start_time);
+    //                 $("#endTime").val(end_time);
+    //                 $("#location").val(appointment["location"]);
+    //                 $("#status").val(appointment["status"]);
+    //                 $(".save").data("id", id);
+    //             }
+    //         };
+    //         xhr.send();
+    //     }
+    // };
+    // xhr1.send();
 }
 async function saveAppointment() {
     toggleLoder("button-primary", "add");
@@ -261,6 +319,9 @@ $(document).ready(async function () {
     const accessToken = await getAccessToken();
 
     $(".add-appointment").click(addAppointment);
+
+
+
     const xhr = new XMLHttpRequest();
     xhr.open("GET", `${BASE_URL}/api/appointments/`);
     xhr.setRequestHeader("Authorization", accessToken);
@@ -276,17 +337,26 @@ $(document).ready(async function () {
                 {
                     data: null,
                     render: function (data, type, row) {
+                        const appointmentData = btoa(JSON.stringify({
+                            id: row.id,
+                            patient_name: row.patient_name,
+                            patient_id: row.patient_id,
+                            start_time: row.start_time,
+                            end_time: row.end_time,
+                            location: row.location,
+                            status: row.status
+                        }));
                         return (
                             `<div class="d-flex"><button title="edit" class="editBtn btn flex-1" data-id="` +
                             row.id +
-                            `" ><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18" fill="none">
-  <path d="M14 7.33326L10.6667 3.99993M1.08331 16.9166L3.90362 16.6032C4.24819 16.5649 4.42048 16.5458 4.58152 16.4937C4.72439 16.4474 4.86035 16.3821 4.98572 16.2994C5.12702 16.2062 5.2496 16.0836 5.49475 15.8385L16.5 4.83326C17.4205 3.91279 17.4205 2.4204 16.5 1.49993C15.5795 0.579452 14.0871 0.579451 13.1667 1.49992L2.16142 12.5052C1.91627 12.7503 1.79369 12.8729 1.70051 13.0142C1.61784 13.1396 1.55249 13.2755 1.50624 13.4184C1.45411 13.5794 1.43497 13.7517 1.39668 14.0963L1.08331 16.9166Z" stroke="#111827" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-</svg></button>` +
+                            `" data-appointment="${appointmentData}" ><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18" fill="none">
+        <path d="M14 7.33326L10.6667 3.99993M1.08331 16.9166L3.90362 16.6032C4.24819 16.5649 4.42048 16.5458 4.58152 16.4937C4.72439 16.4474 4.86035 16.3821 4.98572 16.2994C5.12702 16.2062 5.2496 16.0836 5.49475 15.8385L16.5 4.83326C17.4205 3.91279 17.4205 2.4204 16.5 1.49993C15.5795 0.579452 14.0871 0.579451 13.1667 1.49992L2.16142 12.5052C1.91627 12.7503 1.79369 12.8729 1.70051 13.0142C1.61784 13.1396 1.55249 13.2755 1.50624 13.4184C1.45411 13.5794 1.43497 13.7517 1.39668 14.0963L1.08331 16.9166Z" stroke="#111827" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg></button>` +
                             `<button title="delete" class="deleteBtn btn flex-1" data-id="` +
                             row.id +
                             `"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
-  <path d="M13.3333 4.99984V4.33317C13.3333 3.39975 13.3333 2.93304 13.1517 2.57652C12.9919 2.26292 12.7369 2.00795 12.4233 1.84816C12.0668 1.6665 11.6001 1.6665 10.6667 1.6665H9.33333C8.39991 1.6665 7.9332 1.6665 7.57668 1.84816C7.26308 2.00795 7.00811 2.26292 6.84832 2.57652C6.66667 2.93304 6.66667 3.39975 6.66667 4.33317V4.99984M8.33333 9.58317V13.7498M11.6667 9.58317V13.7498M2.5 4.99984H17.5M15.8333 4.99984V14.3332C15.8333 15.7333 15.8333 16.4334 15.5608 16.9681C15.3212 17.4386 14.9387 17.821 14.4683 18.0607C13.9335 18.3332 13.2335 18.3332 11.8333 18.3332H8.16667C6.76654 18.3332 6.06647 18.3332 5.53169 18.0607C5.06129 17.821 4.67883 17.4386 4.43915 16.9681C4.16667 16.4334 4.16667 15.7333 4.16667 14.3332V4.99984" stroke="#111827" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-</svg></i></button><div>`
+        <path d="M13.3333 4.99984V4.33317C13.3333 3.39975 13.3333 2.93304 13.1517 2.57652C12.9919 2.26292 12.7369 2.00795 12.4233 1.84816C12.0668 1.6665 11.6001 1.6665 10.6667 1.6665H9.33333C8.39991 1.6665 7.9332 1.6665 7.57668 1.84816C7.26308 2.00795 7.00811 2.26292 6.84832 2.57652C6.66667 2.93304 6.66667 3.39975 6.66667 4.33317V4.99984M8.33333 9.58317V13.7498M11.6667 9.58317V13.7498M2.5 4.99984H17.5M15.8333 4.99984V14.3332C15.8333 15.7333 15.8333 16.4334 15.5608 16.9681C15.3212 17.4386 14.9387 17.821 14.4683 18.0607C13.9335 18.3332 13.2335 18.3332 11.8333 18.3332H8.16667C6.76654 18.3332 6.06647 18.3332 5.53169 18.0607C5.06129 17.821 4.67883 17.4386 4.43915 16.9681C4.16667 16.4334 4.16667 15.7333 4.16667 14.3332V4.99984" stroke="#111827" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg></i></button><div>`
                         );
                     },
                 },
@@ -313,6 +383,7 @@ $(document).ready(async function () {
             let table = $("#mod_ehr").DataTable({
                 data: appointmentRecords,
                 columns: columns_data,
+                order: [],
                 language: {
                     lengthMenu: "_MENU_",
                     searchPlaceholder: "Search",
