@@ -3,12 +3,34 @@ import json
 import boto3
 from health_connector_base import models
 from health_connector_base.handlers import APIHandler
+from health_connector_base.models import Patient
+from health_connector_base.handlers import Response
+import time
 
 environment = os.environ.get("ENVIRONMENT", "LOCAL")
 
 
 class AppointmentAPIHandler(APIHandler):
     model = models.Appointment
+
+    def get(self, event, hash_key=None, *args, **kwargs):
+        if hash_key:
+            # Single record retrieval
+            return super().get(event, hash_key, *args, **kwargs)
+
+        valid_patients = {
+            patient.patient_id for patient in Patient.scan(
+                filter_condition = models.Patient.via_rider_id.exists() & (models.Patient.via_rider_id != "")
+            )
+        }
+        filtered_appointments = []
+        for pid in valid_patients:
+            filtered_appointments.extend(list(self.model.patient_id_index.query(pid)))
+
+        filtered_appointments.sort(key=lambda apt: apt.start_time, reverse=True)
+
+        return Response(body=filtered_appointments, status=200)
+        
 
     @classmethod
     def process_event(cls, event: dict, *args, **kwargs):
@@ -23,31 +45,31 @@ class AppointmentAPIHandler(APIHandler):
                 InvocationType="Event",
                 Payload=b"{}",
             )
-        if isinstance(response, dict) and "body" in response:
-            try:
-                # Parse the body JSON
-                response_body = json.loads(response["body"])
+        # if isinstance(response, dict) and "body" in response:
+        #     try:
+        #         # Parse the body JSON
+        #         response_body = json.loads(response["body"])
 
-                # Filter required fields
-                if isinstance(response_body, list):  # Ensure it's a list of appointments
-                    filtered_data = [
-                        {
-                            "id": item["id"],
-                            "location": item["location"],
-                            "patient_name": item["patient_name"],
-                            "start_time": item["start_time"],
-                            "end_time": item["end_time"],
-                            "status": item["status"]
-                        }
-                        for item in response_body
-                        if all(k in item for k in ["id", "location", "patient_name", "start_time", "end_time", "status"])
-                    ]
+        #         # Filter required fields
+        #         if isinstance(response_body, list):  # Ensure it's a list of appointments
+        #             filtered_data = [
+        #                 {
+        #                     "id": item["id"],
+        #                     "location": item["location"],
+        #                     "patient_name": item["patient_name"],
+        #                     "start_time": item["start_time"],
+        #                     "end_time": item["end_time"],
+        #                     "status": item["status"]
+        #                 }
+        #                 for item in response_body
+        #                 if all(k in item for k in ["id", "location", "patient_name", "start_time", "end_time", "status"])
+        #             ]
 
-                    # Update response body
-                    response["body"] = json.dumps(filtered_data)
+        #             # Update response body
+        #             response["body"] = json.dumps(filtered_data)
 
-            except json.JSONDecodeError as e:
-                print(f"Error decoding JSON: {e}")
+        #     except json.JSONDecodeError as e:
+        #         print(f"Error decoding JSON: {e}")
         return response
 
 
