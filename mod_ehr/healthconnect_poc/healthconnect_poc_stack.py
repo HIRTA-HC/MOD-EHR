@@ -84,7 +84,8 @@ class HealthconnectPocStack(Stack):
         self.sftp_bucket = s3.Bucket(
             self,
             f"HealthConnector{self.config.ENVIRONMENT.title()}SFTPBucket",
-            bucket_name=f"{self.config.ENVIRONMENT.lower()}-sftp-server-bucket",
+            # bucket_name=f"{self.config.ENVIRONMENT.lower()}-sftp-server-bucket-dev", #dev account
+            bucket_name=f"{self.config.ENVIRONMENT.lower()}-sftp-server-bucket", #uat/prod account
             removal_policy=RemovalPolicy.DESTROY,
             block_public_access=s3.BlockPublicAccess.BLOCK_ALL,
         )
@@ -229,7 +230,12 @@ class HealthconnectPocStack(Stack):
             f"HealthConnector{self.config.ENVIRONMENT.title()}BucketDeployment",
             sources=[s3_deployment.Source.asset("dashboard_website/dist")],
             destination_bucket=self.bucket,
-            cache_control=[s3_deployment.CacheControl.no_cache()],
+            # cache_control=[s3_deployment.CacheControl.no_cache()],
+            cache_control=[
+                s3_deployment.CacheControl.from_string(
+                    "public, max-age=31536000, immutable"
+                )
+            ],
         )
 
     def create_cloudfront_dist(self):
@@ -239,6 +245,29 @@ class HealthconnectPocStack(Stack):
         self._s3_origin = origins.S3Origin(
             origin_access_identity=self.s3_oai, bucket=self.bucket
         )
+        # api_cache_policy = cloudfront.CachePolicy(
+        #     self,
+        #     f"HealthConnector{self.config.ENVIRONMENT.title()}ApiCachePolicy",
+        #     cache_policy_name=f"healthconnector-api-cache-{self.config.ENVIRONMENT}",
+        #     default_ttl=Duration.seconds(60),
+        #     min_ttl=Duration.seconds(0),
+        #     max_ttl=Duration.seconds(300),
+        #     header_behavior=cloudfront.CacheHeaderBehavior.allow_list(
+        #         "Authorization"
+        #     ),
+        #     cookie_behavior=cloudfront.CacheCookieBehavior.none(),
+        #     query_string_behavior=cloudfront.CacheQueryStringBehavior.none(),
+        #     enable_accept_encoding_gzip=True,
+        #     enable_accept_encoding_brotli=True,
+        # )
+        # api_origin_request_policy = cloudfront.OriginRequestPolicy(
+        #     self,
+        #     f"HealthConnector{self.config.ENVIRONMENT.title()}ApiOriginRequestPolicy",
+        #     origin_request_policy_name=f"healthconnector-api-origin-{self.config.ENVIRONMENT}",
+        #     header_behavior=cloudfront.OriginRequestHeaderBehavior.none(),
+        #     cookie_behavior=cloudfront.OriginRequestCookieBehavior.none(),
+        #     query_string_behavior=cloudfront.OriginRequestQueryStringBehavior.none(),
+        # )
         self.cloudfront_distribution = cloudfront.Distribution(
             self,
             f"HealthConnector{self.config.ENVIRONMENT.title()}CloudFrontDistribution",
@@ -246,7 +275,8 @@ class HealthconnectPocStack(Stack):
                 origin=self._s3_origin,
                 viewer_protocol_policy=cloudfront.ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
                 origin_request_policy=cloudfront.OriginRequestPolicy.CORS_S3_ORIGIN,
-                cache_policy=cloudfront.CachePolicy.CACHING_DISABLED,
+                cache_policy=cloudfront.CachePolicy.CACHING_OPTIMIZED,
+                compress=True,
             ),
             # domain_names=[self.config.DOMAIN],
             # certificate=self.certificate,
@@ -260,6 +290,8 @@ class HealthconnectPocStack(Stack):
             origin_request_policy=cloudfront.OriginRequestPolicy.ALL_VIEWER_EXCEPT_HOST_HEADER,
             viewer_protocol_policy=cloudfront.ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
             cache_policy=cloudfront.CachePolicy.CACHING_DISABLED,
+            # cache_policy = api_cache_policy,
+            # origin_request_policy = api_origin_request_policy,
             allowed_methods=cloudfront.AllowedMethods.ALLOW_ALL,
         )
 
@@ -348,6 +380,8 @@ class HealthconnectPocStack(Stack):
             vpc=self.vpc,
             layers=[self.requirements_layer, self.base_layer],
             timeout=Duration.minutes(10),
+            # tracing=aws_lambda.Tracing.ACTIVE, 
+            memory_size=1024,
         )
 
     def create_appointments_lambda(self):
@@ -449,13 +483,22 @@ class HealthconnectPocStack(Stack):
             layers=[self.requirements_layer, self.base_layer],
             vpc=self.vpc,
             timeout=Duration.minutes(10),
-            ephemeral_storage_size=Size.gibibytes(1),
-            memory_size=1024,
+            memory_size=512,
             environment={
                 "KMS_AVAILABLE": "True",
                 "ENVIRONMENT": self.config.ENVIRONMENT.upper(),
             },
+            # tracing=aws_lambda.Tracing.ACTIVE, 
         )
+        self.settings_lambda_version = self.settings_lambda.current_version
+        self.setting_lambda_alias = aws_lambda.Alias(
+            self,
+            f"HealthConnector{self.config.ENVIRONMENT.title()}SettingsLambdaAlias",
+            alias_name=f"HealthConnector{self.config.ENVIRONMENT.title()}SettingsLambdaAlias",
+            version=self.settings_lambda_version,
+            provisioned_concurrent_executions=1,
+        )
+
 
     def create_logs_lambda(self):
         self.logs_lambda = aws_lambda.Function(
@@ -506,6 +549,9 @@ class HealthconnectPocStack(Stack):
                 allow_methods=apigw.Cors.ALL_METHODS,
             ),
         )
+        # self.api.deployment_stage.options = apigw.StageOptions(
+        #     tracing_enabled=True,
+        # )
         self.apigw_authorizer = apigw.CognitoUserPoolsAuthorizer(
             self,
             f"HealthConnector{self.config.ENVIRONMENT.title()}Authorizer",
@@ -600,14 +646,14 @@ class HealthconnectPocStack(Stack):
         self.settings_resource = self.api.root.add_resource("settings")
         self.settings_resource.add_method(
             "GET",
-            apigw.LambdaIntegration(self.settings_lambda, proxy=True),
+            apigw.LambdaIntegration(self.setting_lambda_alias, proxy=True),
             authorizer=self.apigw_authorizer,
             authorization_scopes=["aws.cognito.signin.user.admin"],
         )
         self.settings_detail_resource = self.settings_resource.add_resource("{name}")
         self.settings_detail_resource.add_method(
             "POST",
-            apigw.LambdaIntegration(self.settings_lambda, proxy=True),
+            apigw.LambdaIntegration(self.setting_lambda_alias, proxy=True),
             authorizer=self.apigw_authorizer,
             authorization_scopes=["aws.cognito.signin.user.admin"],
         )

@@ -51,9 +51,10 @@ const handleInputChange = async () => {
 
 const handleSettingsClick = async () => {
   toggler("settingsToggler", "settingsModal");
+  toggleSkeletonLoader("settingsForm", "add");
   const accessToken = await getAccessToken();
   if (settingsDataStatus === false) {
-    toggleSkeletonLoader("settingsForm", "add");
+    
     xhr.open("GET", `${BASE_URL}/api/settings/`);
     xhr.setRequestHeader("Authorization", accessToken);
     xhr.onreadystatechange = async function () {
@@ -69,10 +70,12 @@ const handleSettingsClick = async () => {
         }
       }
     };
+    xhr.send();
   } else {
+    toggleSkeletonLoader("settingsForm", "remove");
     settingsDataStatus = false;
   }
-  xhr.send();
+
 };
 
 const handleFormSubmit = async () => {
