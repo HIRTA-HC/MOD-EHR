@@ -13,7 +13,8 @@ app = cdk.App()
 
 healthconnect_poc_stack = HealthconnectPocStack(
     app,
-    f"{config.ENVIRONMENT.title()}HealthconnectPocMODEHRStack",
+    f"{config.ENVIRONMENT.title()}HealthconnectPocMODEHRStack", #prod
+    # f"{config.ENVIRONMENT.title()}HealthconnectPocStack" #uat, dev
     config=config,
     env=cdk.Environment(
         account=boto3.client("sts").get_caller_identity()["Account"],
