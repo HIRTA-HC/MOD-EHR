@@ -2,14 +2,14 @@
 
 ## Overview
 
-MOD-EHR is a multi-tenant platform that coordinates non-emergency medical transportation for hospital patients. It isn't a general clinical EHR (it doesn't store diagnoses, medications, or clinical notes) — it sits alongside a hospital's real EHR, pulling in just enough appointment and patient data to answer one question: **does this patient have a ride to and from their appointment, and if not, can we get them one?**
+MOD-EHR is a multi-tenant platform that coordinates non-emergency medical transportation for hospital patients. The platform sits alongside a hospital's EHR system, pulling in just enough appointment and patient data to answer one question: **does this patient have a ride to and from their appointment, and if not, can we get them one?**. Users are able to match transportation bookings from an agency's transportation management system to booked medical appointments at partner medical facilities. For patients that do not have transportation booked, users can then book transportation through the agency directly within the platform.
 
 Each hospital is a tenant. A single shared deployment serves every tenant, but every record — patients, appointments, settings, logs — is tied to a `hospital_id` and strictly isolated at query time, so hospitals never see each other's data even though they share the same infrastructure. Each tenant also gets its own subdomain and branding.
 
 Appointments reach the system three ways:
 - **Epic** — polled live from a hospital's Epic FHIR API on a schedule.
 - **Veradigm** — CSV files a hospital's Veradigm system drops onto an SFTP server.
-- **Manual entry** — typed in directly by hospital staff (Development environments only today — see the [Admin and Tenant Users Guide](documents/Admin-and-Tenant-Users-Guide.md)).
+- **Manual entry** — typed in directly by hospital staff (Development environments only today — see the [Admin and Tenant Users Guide](documentation/Admin-and-Tenant-Users-Guide.md)).
 
 Once an appointment exists, the system tries to match it to a ride the patient already has booked with **Via** (the transportation provider), or lets staff book one on the spot. Every appointment can have two independent legs — a ride *to* it and a ride *from* it — each matched and tracked separately.
 
@@ -35,11 +35,11 @@ The application is fully serverless, built on AWS and deployed with the CDK.
 - **Auth** — a single Amazon Cognito User Pool for every tenant. A custom `custom:hospital_id` claim on each user's token is what tenant isolation is actually built on — not separate user pools per hospital.
 - **API Layer** — API Gateway, secured with a Cognito authorizer on (almost) every route, in front of one Lambda function per resource.
 - **Backend Compute** — AWS Lambda for every piece of business logic: CRUD APIs, ride booking, Epic polling, Veradigm CSV processing, and the SFTP identity provider.
-- **Database** — Amazon DynamoDB: five tables (Hospitals, Appointments, Patients, Settings, SFTP Logs), all partitioned by `hospital_id` (Hospitals is partitioned by its own `id`). See [EHR-Database-Architecture.md](documents/EHR-Database-Architecture.md).
+- **Database** — Amazon DynamoDB: five tables (Hospitals, Appointments, Patients, Settings, SFTP Logs), all partitioned by `hospital_id` (Hospitals is partitioned by its own `id`). See [EHR-Database-Architecture.md](documentation/EHR-Database-Architecture.md).
 - **Integrations**:
-  - **Epic** — SMART on FHIR backend service auth (per-hospital JWKS), polled on a schedule. See [EPIC-Integration-Setup-Process.md](documents/EPIC-Integration-Setup-Process.md).
-  - **Veradigm** — AWS Transfer Family SFTP server with a Lambda-backed custom identity provider, S3 + EventBridge triggering CSV processing. See [Veradigm-Integration-Multi-Tenant.md](documents/Veradigm-Integration-Multi-Tenant.md).
-  - **Via** — a single, shared (not per-tenant) account used both for on-demand ride booking and for automatically matching existing appointments to rides. See [Via-Integration-Architecture.md](documents/Via-Integration-Architecture.md).
+  - **Epic** — SMART on FHIR backend service auth (per-hospital JWKS), polled on a schedule. See [EPIC-Integration-Setup-Process.md](documentation/EPIC-Integration-Setup-Process.md).
+  - **Veradigm** — AWS Transfer Family SFTP server with a Lambda-backed custom identity provider, S3 + EventBridge triggering CSV processing. See [Veradigm-Integration-Multi-Tenant.md](documentation/Veradigm-Integration-Multi-Tenant.md).
+  - **Via** — a single, shared (not per-tenant) account used both for on-demand ride booking and for automatically matching existing appointments to rides. See [Via-Integration-Architecture.md](documentation/Via-Integration-Architecture.md).
 - **Secrets** — AWS Secrets Manager: one secret per hospital for Epic/Veradigm credentials, and a handful of shared secrets (Via, Google Maps) used across every tenant.
 
 ## Data Flow
@@ -60,12 +60,12 @@ On its own schedule, a Lambda re-scans open appointments and, for any patient li
 
 | Doc | What's in it |
 |---|---|
-| [EHR-Multi-Tenant-Deployment-Steps.md](documents/EHR-Multi-Tenant-Deployment-Steps.md) | Deploying the stack from scratch — environment setup, Lambda layers, CDK deploy, dashboard build, custom domain. |
-| [EHR-Database-Architecture.md](documents/EHR-Database-Architecture.md) | The five DynamoDB tables, their keys/GSIs, and how queries stay tenant-isolated. |
-| [API-Documentation.md](documents/API-Documentation.md) | Every REST endpoint — auth model, request/response shapes, per-endpoint authorization rules. |
-| [EPIC-Integration-Setup-Process.md](documents/EPIC-Integration-Setup-Process.md) | Registering a hospital with Epic: credentials, SSH/JWKS setup, the incoming API list. |
-| [Veradigm-Integration-Multi-Tenant.md](documents/Veradigm-Integration-Multi-Tenant.md) | Onboarding a Veradigm provider, the required CSV format, and the SFTP-to-DynamoDB data flow. |
-| [Via-Integration-Architecture.md](documents/Via-Integration-Architecture.md) | How rides get booked on-demand vs. automatically matched to appointments. |
-| [Admin-and-Tenant-Users-Guide.md](documents/Admin-and-Tenant-Users-Guide.md) | Using the admin portal (tenants, users) and the tenant dashboard (day-to-day ride coordination). |
+| [EHR-Multi-Tenant-Deployment-Steps.md](documentation/EHR-Multi-Tenant-Deployment-Steps.md) | Deploying the stack from scratch — environment setup, Lambda layers, CDK deploy, dashboard build, custom domain. |
+| [EHR-Database-Architecture.md](documentation/EHR-Database-Architecture.md) | The five DynamoDB tables, their keys/GSIs, and how queries stay tenant-isolated. |
+| [API-Documentation.md](documentation/API-Documentation.md) | Every REST endpoint — auth model, request/response shapes, per-endpoint authorization rules. |
+| [EPIC-Integration-Setup-Process.md](documentation/EPIC-Integration-Setup-Process.md) | Registering a hospital with Epic: credentials, SSH/JWKS setup, the incoming API list. |
+| [Veradigm-Integration-Multi-Tenant.md](documentation/Veradigm-Integration-Multi-Tenant.md) | Onboarding a Veradigm provider, the required CSV format, and the SFTP-to-DynamoDB data flow. |
+| [Via-Integration-Architecture.md](documentation/Via-Integration-Architecture.md) | How rides get booked on-demand vs. automatically matched to appointments. |
+| [Admin-and-Tenant-Users-Guide.md](documentation/Admin-and-Tenant-Users-Guide.md) | Using the admin portal (tenants, users) and the tenant dashboard (day-to-day ride coordination). |
 
 **New here?** Read this page first, then the deployment guide if you're standing up an environment, or the Admin and Tenant Users Guide if you're just using one.
